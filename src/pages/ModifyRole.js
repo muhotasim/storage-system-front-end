@@ -17,21 +17,21 @@ const ModifyRole= props => {
 
     useEffect(()=>{
         
-        const apiHandeler = new ApiHandeler()
+        const apiHandeler = new ApiHandeler(props.userStore.token)
         setName('')
-        apiHandeler.query("permissions",{ 
+        apiHandeler.querySystem("permissions",{ 
             condition: JSON.stringify([{ field: "id", condition: ">", value: 9 }]), }).then(res=>res.json()).then(permissionRes=>{
             if(permissionRes.type==appConst.successResponseType){
                 
                 setPermissions(permissionRes.data)
                 if(id){
 
-                    apiHandeler.get(roles,id).then(res=>res.json()).then(res=>{
+                    apiHandeler.getSystem(roles,id).then(res=>res.json()).then(res=>{
                         if(res.type==appConst.successResponseType){
                             const user = res.data[0]
                             setName(user.name)
                             
-                            apiHandeler.query("role_permission",{ 
+                            apiHandeler.querySystem("role_permission",{ 
                                 select: JSON.stringify(['permission_id']),
                                 condition: JSON.stringify([{ field: "role_id", condition: "=", value: id }]),
                                 
@@ -64,9 +64,9 @@ const ModifyRole= props => {
             return
         }
         setError('')
-        const apiHandeler = new ApiHandeler()
+        const apiHandeler = new ApiHandeler(props.userStore.token)
         if(id){
-            apiHandeler.updateUser(id,roles,{
+            apiHandeler.updateSystem(id,roles,{
                 name, permissions: selectedPermissions.join(",") 
             }).then(res=>res.json()).then(res=>{
                 if(res.type==appConst.successResponseType){
@@ -78,7 +78,7 @@ const ModifyRole= props => {
             })
         }else{
             
-            apiHandeler.insertUser(roles,{
+            apiHandeler.insertSystem(roles,{
                 name, permissions: selectedPermissions.join(",") 
             }).then(res=>res.json()).then(res=>{
                 if(res.type==appConst.successResponseType){
@@ -104,7 +104,7 @@ const ModifyRole= props => {
         setSelectedPermissions(selectedPermissionsData);
     }
     return <div className="container page">
-         <Header title={message[appConst.lan].pages.createUser.header.title} description={message[appConst.lan].pages.createUser.header.content}/>
+         <Header title={id?message[appConst.lan].pages.modifyRole.header.title:message[appConst.lan].pages.createRole.header.title} description={message[appConst.lan].pages.modifyRole.header.content}/>
 
         <div className="row">
             <div className="col-md-6">

@@ -1,7 +1,8 @@
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
 import React from "react";
+import { connect } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-const Navigation = ({ menu = [] }) => {
+const Navigation = ({ menu = [], logout }) => {
   const { pathname } = useLocation();
   return (
     <nav>
@@ -12,9 +13,22 @@ const Navigation = ({ menu = [] }) => {
             {menuItem.menu.map((submenuItem, subIndex) =>(<li key={index+"_sub_"+subIndex} className={pathname===submenuItem.link?"active":""}><Link to={submenuItem.link} >{submenuItem.label}</Link></li>))}
           </ul>:null}
           </li>))}
+          <li className="logout"><a onClick={logout}> <LogoutOutlined/> Logout</a></li>
         </ul>
       </div>
     </nav>
   );
 };
-export default Navigation;
+const mapStateToProps = (state)=>{
+  return {
+      userStore: state.userStore
+  }
+}
+const mapDispatchToProps = (dispatch)=>{
+  return {
+    logout: ()=>{
+      dispatch({ type: "logout" })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation)

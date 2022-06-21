@@ -20,19 +20,19 @@ const ModifyUser= props => {
     const [ errorMessage, setError ] = useState('')
 
     useEffect(()=>{
-        
-        const apiHandeler = new ApiHandeler()
+
+        const apiHandeler = new ApiHandeler(props.userStore.token)
         setEmail('')
         setName('')
         setPassword('')
         setStatus(true)
         setIsInternal(false)
-        apiHandeler.query("roles",{  }).then(res=>res.json()).then(roleRes=>{
+        apiHandeler.querySystem("roles",{  }).then(res=>res.json()).then(roleRes=>{
             if(roleRes.type==appConst.successResponseType){
                 setRoles(roleRes.data)
                 if(id){
 
-                    apiHandeler.get(users,id).then(res=>res.json()).then(res=>{
+                    apiHandeler.getSystem(users,id).then(res=>res.json()).then(res=>{
                         if(res.type==appConst.successResponseType){
                             const user = res.data[0]
                             setEmail(user.email)
@@ -40,13 +40,13 @@ const ModifyUser= props => {
                             setPassword(user.password)
                             setStatus(user.status?true:false)
                             setIsInternal(user.is_internal?true:false)
-                            debugger
-                            apiHandeler.query("user_role",{ 
+                            
+                            apiHandeler.querySystem("user_role",{ 
                                 select: JSON.stringify(['role_id']),
                                 condition: JSON.stringify([{ field: "user_id", condition: "=", value: id }]) 
                             })
                             .then(res=>res.json()).then(roleRes=>{
-                               debugger
+                               
                                 if(roleRes.type==appConst.successResponseType){
                                     
                                     setSelectedRoles(roleRes.data.map(role=>role.role_id))
@@ -73,7 +73,8 @@ const ModifyUser= props => {
             return
         }
         setError('')
-        const apiHandeler = new ApiHandeler()
+        
+        const apiHandeler = new ApiHandeler(props.userStore.token)
         if(id){
             apiHandeler.updateUser(id,users,{
                 name, email, password,is_internal:isInternal?1:0,status:status?1:0, roles: selectedRoles.join(",") 
@@ -128,11 +129,11 @@ const ModifyUser= props => {
                 </div>
                 <div className="mt-10 mb-15">
                     <label>Email</label>
-                    <input className="input input-md" name="mail" value={email} onChange={e=>setEmail(e.target.value)}/>
+                    <input className="input input-md"  value={email} onChange={e=>setEmail(e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-15">
                     <label>Password</label>
-                    <input className="input input-md" name="pass" type="password" value={password} onChange={e=>setPassword(e.target.value)}/>
+                    <input className="input input-md"  value={password} onChange={e=>setPassword(e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-15">
                     <label>  <input type={"checkbox"} checked={isInternal} onChange={e=>setIsInternal(!isInternal)}/> Is Internal</label>

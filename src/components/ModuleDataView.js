@@ -439,7 +439,7 @@ export const DataForm = ({ tableName ,fields, id = null, afterSaveOrUpdateCallba
   },[])
   const onSaveOrUpdate = (e)=>{
     e.preventDefault();
-    const apiHandeler = new ApiHandeler()
+    const apiHandeler = new ApiHandeler(token)
     if(id){
       apiHandeler.update(id,tableName,fieldsData).then(res=>res.json()).then(res=>{
         

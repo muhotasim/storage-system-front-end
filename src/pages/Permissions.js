@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { DataForm } from "../components/ModuleDataView";
 import Modal from "../components/Modal";
 import { DeleteFilled, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 const molduleName  = "permissions";
 const columns = [
   { columnName: "label", displayName: "Permission Label", fieldType: "data" },
@@ -22,13 +23,14 @@ const Permissions = (props) => {
   const [ loading, setLoading ] = useState(false);
   const [ editModelData, setEditModelData ] = useState({show: false, id: null})
   const [ fields, setFields ] = useState([])
+  const navigate = useNavigate();
   const editData = d =>{
-    setEditModelData({show: true, id: d.id})
+    navigate("/permissions/modify/"+d.id)
 
   }
   const deleteData = d =>{
-    const apiHandeler =  new ApiHandeler();
-    apiHandeler.delete(molduleName,d.id).then(res=>res.json()).then(res=>{
+    const apiHandeler =  new ApiHandeler(props.userStore.token);
+    apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
       if(res.type == appConst.successResponseType){
 
         window.notify(message[appConst.lan].deletedSuccess,3000,"success");
@@ -48,12 +50,12 @@ const Permissions = (props) => {
     loadData();
   },[ page ])
   const loadData = ()=>{
-    const apiHandeler = new ApiHandeler();
+    const apiHandeler = new ApiHandeler(props.userStore.token);
     setLoading(true)
-    apiHandeler.count(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(Cres=>{
+    apiHandeler.countSystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(Cres=>{
       if(appConst.successResponseType==Cres.type){
         const countData = Cres.data.count;
-        apiHandeler.query(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(res=>{
+        apiHandeler.querySystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(res=>{
           if(appConst.successResponseType==res.type){
             const data = res.data.map((d)=>{
               if(!(d.id<=9)){
@@ -86,23 +88,11 @@ const Permissions = (props) => {
         <Header title={message[appConst.lan].pages.permissions.header.title} description={message[appConst.lan].pages.permissions.header.content}/>
         <div >
           <button className="btn btn-sm btn-primary pull-right" onClick={(e)=>{
-            e.preventDefault();
-            setEditModelData({show: true, id: null})
+            e.preventDefault(); 
+            navigate("/permissions/create")
           }}><PlusOutlined/> {message[appConst.lan].pages.modules.form.add}</button>
           <p className="clearfix"></p>
         </div>
-        <Modal show={editModelData.show} onClose={()=>setEditModelData({show: false, id: null})}>
-          <div>
-           {editModelData.show?<DataForm 
-            tableName={molduleName} 
-            id={editModelData.id} 
-            fields={fields} 
-            afterSaveOrUpdateCallback={()=>{
-              loadData()
-              setEditModelData({show: false, id: null})
-            }}/>:null}
-          </div>
-        </Modal>
         <div className="pt-15 pb-15">
           <Datatable columns={columns} totalPage={totalPages} currentPage={page} data={data} loading={loading} onPageChange={p=>setPage(p)}/>
         </div>

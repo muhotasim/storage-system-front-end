@@ -29,8 +29,8 @@ const Roles = (props) => {
 
   }
   const deleteData = d =>{
-    const apiHandeler =  new ApiHandeler();
-    apiHandeler.delete(molduleName,d.id).then(res=>res.json()).then(res=>{
+    const apiHandeler =  new ApiHandeler(props.userStore.token);
+    apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
       if(res.type == appConst.successResponseType){
 
         window.notify(message[appConst.lan].deletedSuccess,3000,"success");
@@ -52,12 +52,12 @@ const Roles = (props) => {
   },[ page ])
 
   const loadData = ()=>{
-    const apiHandeler = new ApiHandeler();
+    const apiHandeler = new ApiHandeler(props.userStore.token);
     setLoading(true)
-    apiHandeler.count(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(Cres=>{
+    apiHandeler.countSystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(Cres=>{
       if(appConst.successResponseType==Cres.type){
         const countData = Cres.data.count;
-        apiHandeler.query(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(res=>{
+        apiHandeler.querySystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(res=>{
           if(appConst.successResponseType==res.type){
             const data = res.data.map(d=>{
               d.action = [<button className="btn btn-sm btn-primary mr-5" onClick={(e)=>{

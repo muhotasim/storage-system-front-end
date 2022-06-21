@@ -67,7 +67,7 @@
     width: 100vw;
     .login-box{
         position: absolute;
-        top: 50%;
+        top: 45%;
         left: 50%;
         transform: translate(-50%,-50%);
         max-width: 50rem;
@@ -75,5 +75,6 @@
         padding: 2.5rem;
         border: 1px solid #eee;
         border-radius: 3px;
+        box-shadow: 3px 3px 10px rgba(50, 50, 50,.5);
     }
 }

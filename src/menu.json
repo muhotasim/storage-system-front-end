@@ -22,7 +22,13 @@
     {
         "link": "/permissions",
         "label": "Permissions",
-        "menu": []
+        "menu": [
+            {
+                "link": "/permissions/create",
+                "label": "Create Permission",
+                "menu": []
+            }
+        ]
     },
     {
         "link": "/roles",

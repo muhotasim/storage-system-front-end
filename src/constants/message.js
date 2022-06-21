@@ -80,6 +80,30 @@ const message = {
           content: "Create and modify users",
         },
       },
+      modifyRole:{
+        header: {
+          title: "Modify Role",
+          content: "",
+        },
+      },
+      createRole:{
+        header: {
+          title: "Create Role",
+          content: "",
+        },
+      },
+      modifyPermission:{
+        header: {
+          title: "Modify Permission",
+          content: "",
+        },
+      },
+      createPermission:{
+        header: {
+          title: "Create Permission",
+          content: "",
+        },
+      },
       roles: {
         header: {
           title: "Roles",

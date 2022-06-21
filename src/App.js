@@ -16,6 +16,7 @@ const Permissions = lazy(()=>import('./pages/Permissions'));
 const Roles = lazy(()=>import('./pages/Roles'));
 const ModifyUser = lazy(()=>import('./pages/ModifyUser'));
 const ModifyRole = lazy(()=>import('./pages/ModifyRole'));
+const ModifyPermission =lazy(()=>import('./pages/ModifyPermission'));
 
 const LoginBox = lazy(()=>import("./components/LoginBox"));
 
@@ -61,6 +62,8 @@ const App = props=>{
                 <Route exact path="/roles/modify/:id" key="role-edit" element={<ModifyRole/>}/>
 
                 <Route exact path="/permissions" element={<Permissions/>}/>
+                <Route exact path="/permissions/create" key="role-create" element={<ModifyPermission/>}/>
+                <Route exact path="/permissions/modify/:id" key="role-edit" element={<ModifyPermission/>}/>
             </Switch>
             </div>
         </Router>

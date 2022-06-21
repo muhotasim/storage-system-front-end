@@ -402,20 +402,25 @@ const ModulePermissions = (props)=>{
     })
     const apiHandeler = new ApiHandeler(props.token)
     apiHandeler.applyPermission(props.systemId,JSON.stringify(newPermissions)).then(res=>res.json()).then(res=>{
-      debugger
+      if(res.type==appConst.successResponseType){
+        window.notify(
+          message[appConst.lan].successSave, 3000, "default");
+      }else{
+            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
+      }
     })
   }
 
   useEffect(()=>{
     
     const apiHandeler = new ApiHandeler(props.token)
-    apiHandeler.query("roles",{  }).then(res=>res.json()).then(roleRes=>{
+    apiHandeler.querySystem("roles",{  }).then(res=>res.json()).then(roleRes=>{
       if(roleRes.type==appConst.successResponseType){
           setRoles(roleRes.data)
-          apiHandeler.query("permissions",{ limit: 9 }).then(res=>res.json()).then(permissionRes=>{
+          apiHandeler.querySystem("permissions",{ limit: 9 }).then(res=>res.json()).then(permissionRes=>{
             if(permissionRes.type==appConst.successResponseType){
               setPermission(permissionRes.data)
-              apiHandeler.query("system_role_permission",{  condition: JSON.stringify([{ field: "system_id", condition: "=", value: props.systemId }]) }).then(res=>res.json()).then(systemPermission=>{
+              apiHandeler.querySystem("system_role_permission",{  condition: JSON.stringify([{ field: "system_id", condition: "=", value: props.systemId }]) }).then(res=>res.json()).then(systemPermission=>{
                 if(systemPermission.type==appConst.successResponseType){
                   let systemPermissionObj = {};
                   systemPermission.data.forEach(permission=>{

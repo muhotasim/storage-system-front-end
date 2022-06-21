@@ -30,8 +30,8 @@ const Users = (props) => {
     navigate("/users/modify/"+d.id)
   }
   const deleteData = d =>{
-    const apiHandeler =  new ApiHandeler();
-    apiHandeler.delete(molduleName,d.id).then(res=>res.json()).then(res=>{
+    const apiHandeler =  new ApiHandeler(props.userStore.token);
+    apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
       if(res.type == appConst.successResponseType){
         window.notify(message[appConst.lan].deletedSuccess,3000,"success");
         loadData()
@@ -46,13 +46,13 @@ const Users = (props) => {
     loadData();
   },[ page ])
   const loadData = ()=>{
-    const apiHandeler = new ApiHandeler();
+    const apiHandeler = new ApiHandeler(props.userStore.token);
     const q = filterObj?{...filterObj,...{ limit: limit, skip: (page-1)*limit }}:{ limit: limit, skip: (page-1)*limit }
     setLoading(true)
-    apiHandeler.count(molduleName, q).then(res=>res.json()).then(Cres=>{
+    apiHandeler.countSystem(molduleName, q).then(res=>res.json()).then(Cres=>{
       if(appConst.successResponseType==Cres.type){
         const countData = Cres.data.count;
-        apiHandeler.query(molduleName, q).then(res=>res.json()).then(res=>{
+        apiHandeler.querySystem(molduleName, q).then(res=>res.json()).then(res=>{
           if(appConst.successResponseType==res.type){
             const data = res.data.map((d)=>{
               d.action = [<button className="btn btn-sm btn-primary mr-5" onClick={(e)=>{
