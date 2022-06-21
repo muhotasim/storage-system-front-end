@@ -5,7 +5,8 @@ import {
   LeftOutlined,
   TableOutlined,
   KeyOutlined,
-  LockOutlined
+  LockOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import ApiHandeler from "../apiHandeler";
@@ -327,12 +328,12 @@ const ModifyModuleForm = (props) => {
               <div>
                 <div className="field-list">
                   <p className="mb-15 mt-15 pt-15">
-                    {message[appConst.lan].pages.modules.form.fieldList}{" "}
+                    {message[appConst.lan].pages.modules.form.fieldList}
                     <button
                       className="btn btn-sm btn-primary pull-right"
                       onClick={addField}
                     >
-                      {message[appConst.lan].pages.modules.form.add}
+                      <PlusOutlined/>
                     </button>
                   </p>
 
