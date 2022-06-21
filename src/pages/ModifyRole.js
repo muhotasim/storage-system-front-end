@@ -114,15 +114,15 @@ const ModifyRole= props => {
                 </div>
               </div>}
                 <div className="mt-10 mb-15">
-                    <label>Name</label>
+                    <label>{message[appConst.lan].pages.roles.form.name}</label>
                     <input className="input input-md" value={name} onChange={e=>setName(e.target.value)}/>
                 </div>
   
                 <div className="mb-15 mt-15">
-                    <label className="d-label pb-15 mb-15 pt-15">Permissions</label>
+                    <label className="d-label pb-15 mb-15 pt-15">{message[appConst.lan].pages.roles.form.permissions}</label>
                     {permissions.length?<div className="row">
-                        {permissions.map((permission,index)=>(<div className="col-md-4"><label className="d-block pt-5"><input type={"checkbox"} checked={selectedPermissions.includes(permission.id)} onChange={()=>permissionCheckUncheck(permission.id)}/>  {permission.label}</label></div>))}
-                    </div>:<p className="pt-15 pb-15 text-center">No Permission avilable</p>}
+                        {permissions.map((permission,index)=>(<div key={'perm_'+index} className="col-md-4"><label className="d-block pt-5"><input type={"checkbox"} checked={selectedPermissions.includes(permission.id)} onChange={()=>permissionCheckUncheck(permission.id)}/>  {permission.label}</label></div>))}
+                    </div>:<p className="pt-15 pb-15 text-center">{message[appConst.lan].pages.roles.form.noPermission}</p>}
                 </div>
                 <button className="btn btn-md btn-primary mt-15 pull-right" onClick={onSubmit}><SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save} </button>
         

@@ -79,6 +79,15 @@ const message = {
           title: "Users",
           content: "Create and modify users",
         },
+        form: {
+          name:"Name",
+          email:"Email",
+          password:"Password",
+          internal:"Is Internal",
+          status:"Status",
+          roles:"Roles",
+          noRole:"No Roles Avilable",
+        }
       },
       modifyRole:{
         header: {
@@ -109,12 +118,21 @@ const message = {
           title: "Roles",
           content: "Create and modify roles",
         },
+        form: {
+          name:"Name",
+          permissions:"Permissions",
+          noPermission:"No Permission Found"
+        }
       },
       permissions: {
         header: {
           title: "Permissions",
           content: "Create and modify permissions",
         },
+        form:{
+          label:"Permission Label",
+          key:"Permission Key",
+        }
       },
     },
     statusText:{
@@ -140,7 +158,13 @@ const message = {
     successSave: "Saved successfully",
     updatedSave: "Updated successfully",
     deletedSuccess: "Deleted successfully",
-    noDataFound:"No Data Found"
+    noDataFound:"No Data Found",
+    loginBox:{
+      title: "Login",
+      email: "Email",
+      password: "Password",
+      login:"Login"
+    }
   },
 };
 export default message;

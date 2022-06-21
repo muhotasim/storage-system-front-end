@@ -70,11 +70,11 @@ const ModifyPermission = props=>{
            </div>
          </div>}
            <div className="mt-10 mb-15">
-               <label>Permission Label</label>
+               <label>{message[appConst.lan].pages.permissions.form.label}</label>
                <input className="input input-md" value={label} onChange={e=>setLabel(e.target.value)}/>
            </div>
            <div className="mt-10 mb-15">
-               <label>Permission Key</label>
+               <label>{message[appConst.lan].pages.permissions.form.key}</label>
                <input className="input input-md" value={key} onChange={e=>setKey(e.target.value)}/>
            </div>
 

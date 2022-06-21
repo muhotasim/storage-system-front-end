@@ -124,30 +124,30 @@ const ModifyUser= props => {
                 </div>
               </div>}
                 <div className="mt-10 mb-15">
-                    <label>Name</label>
+                    <label>{message[appConst.lan].pages.users.form.name}</label>
                     <input className="input input-md" value={name} onChange={e=>setName(e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-15">
-                    <label>Email</label>
+                    <label>{message[appConst.lan].pages.users.form.email}</label>
                     <input className="input input-md"  value={email} onChange={e=>setEmail(e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-15">
-                    <label>Password</label>
+                    <label>{message[appConst.lan].pages.users.form.password}</label>
                     <input className="input input-md"  value={password} onChange={e=>setPassword(e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-15">
-                    <label>  <input type={"checkbox"} checked={isInternal} onChange={e=>setIsInternal(!isInternal)}/> Is Internal</label>
+                    <label>  <input type={"checkbox"} checked={isInternal} onChange={e=>setIsInternal(!isInternal)}/> {message[appConst.lan].pages.users.form.internal}</label>
                 </div>
                 <div className="mt-10 mb-15">
-                    <label>  <input type={"checkbox"} checked={status} onChange={e=>setStatus(!status)}/> Status</label>
+                    <label>  <input type={"checkbox"} checked={status} onChange={e=>setStatus(!status)}/> {message[appConst.lan].pages.users.form.status}</label>
                 </div>
                 <div className="pt-15">
-                    <label className="d-block pb-5">Roles</label>
+                    <label className="d-block pb-5">{message[appConst.lan].pages.users.form.roles}</label>
                 </div>
                 <div className="mb-15 mt-15">
                     {roles.length?<div className="row">
-                        {roles.map((role,index)=>(<div className="col-md-4"><label className="d-block pt-5"><input type={"checkbox"} checked={selectedRoles.includes(role.id)} onChange={()=>roleCheckUncheck(role.id)}/>  {role.name}</label></div>))}
-                    </div>:<p className="pt-15 pb-15 text-center">No Roles Avilable</p>}
+                        {roles.map((role,index)=>(<div key={'role_'+index} className="col-md-4"><label className="d-block pt-5"><input type={"checkbox"} checked={selectedRoles.includes(role.id)} onChange={()=>roleCheckUncheck(role.id)}/>  {role.name}</label></div>))}
+                    </div>:<p className="pt-15 pb-15 text-center">{message[appConst.lan].pages.users.form.noRole}</p>}
                 </div>
                 <button className="btn btn-md btn-primary pull-right" onClick={onSubmit}><SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save} </button>
         
