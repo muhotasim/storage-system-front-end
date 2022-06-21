@@ -1,0 +1,38 @@
+[
+    {
+        "link": "/",
+        "label": "Apps",
+        "menu": []
+    },
+    {
+        "link": "/modules",
+        "label": "Modules",
+        "menu": []
+    },
+    {
+        "link": "/users",
+        "label": "Users",
+        "menu": [
+            {
+                "link": "/users/create",
+                "label": "Create User"
+            }
+        ]
+    },
+    {
+        "link": "/permissions",
+        "label": "Permissions",
+        "menu": []
+    },
+    {
+        "link": "/roles",
+        "label": "Roles",
+        "menu": [
+            {
+                "link": "/roles/create",
+                "label": "Create Role",
+                "menu": []
+            }
+        ]
+    }
+]

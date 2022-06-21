@@ -1,0 +1,87 @@
+$row-gap: 1rem;
+$total-column: 12;
+
+.box {
+    width: 100%;
+    content: " ";
+    display: block;
+    min-height: 40px;
+    margin: 5px;
+    background-color: #eee;
+    text-align: center;
+    color: #222;
+    padding: 20px;
+}
+
+.row {
+    &::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    @for $i from 1 through $total-column {
+        .col-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+
+
+}
+
+
+@media (min-width: 576px) {
+    @for $i from 1 through $total-column {
+        .col-sm-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+}
+
+
+@media (min-width: 768px) {
+    @for $i from 1 through $total-column {
+        .col-md-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+}
+
+
+@media (min-width: 992px) {
+    @for $i from 1 through $total-column {
+        .col-lg-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+}
+
+
+@media (min-width: 1200px) {
+    @for $i from 1 through $total-column {
+        .col-xl-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+}
+
+
+@media (min-width: 1400px) {
+    @for $i from 1 through $total-column {
+        .col-xx-#{$i} {
+            width: calc(100% / $total-column*$i);
+            float: left;
+            padding: 0 $row-gap;
+        }
+    }
+}

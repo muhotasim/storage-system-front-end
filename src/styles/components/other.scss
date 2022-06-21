@@ -1,0 +1,58 @@
+// loader
+.loader{
+    &-circle{
+        height: 5rem;
+        width: 5rem;
+        border: 2px solid #003c8f;
+        border-radius: 2.5rem;
+        position: relative;
+        margin: 1rem auto;
+        animation: rotate-circle .5s linear infinite;
+        &::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: -3px;
+            background: white;
+        }
+    }
+    .message::after{
+        content: "";
+        padding-left: 3px;
+        animation: lot-loading .8s linear infinite;
+
+    }
+}
+// apps card 
+.app-card{
+    padding: 15px;
+    border: 1px solid lightgray;
+    margin: 0 5px 15px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .4s;
+    .app-card-title{
+        padding-bottom: 5px;
+    }
+    .app-card-status{
+        padding-top: 10px;
+    }
+    &:hover{
+        box-shadow: 2px 2px 15px #ccc;
+    }
+    &:active{
+        box-shadow: 1px 1px 5px #ccc;
+    }
+}
+h4.app-list-title{
+    font-weight: 500;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid lightgray;
+}
+.app-list{
+    max-height: 40rem;
+    overflow-y: scroll;
+    
+}

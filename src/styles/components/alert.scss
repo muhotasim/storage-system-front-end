@@ -1,0 +1,32 @@
+.alert{
+    width: 100%;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    &-sm{
+        height: 3rem;
+        padding: 6px;
+    }
+    &-md{
+        height: 4rem;
+        padding: 1.5rem;
+        padding-top: 1rem;
+    }
+    &-lg{
+        height: 6rem;
+        padding: 1.5rem;
+        padding-top: 2rem;
+    }
+    
+    &-primary{
+        background-color: #1565c0;
+        color: #fff;
+    }
+    &-danger{
+        background-color: #d50000;
+        color: #fff;
+    }
+    &-success{
+        background-color: #2e7d32;
+        color: #fff;
+    }
+}

@@ -1,0 +1,67 @@
+
+@for $i from 1 through 3 {
+    .px-#{$i*5}{padding: #{$i*5}px;}
+    .pl-#{$i*5}{padding-left: #{$i*5}px;}
+    .pr-#{$i*5}{padding-right: #{$i*5}px;}
+    .pt-#{$i*5}{padding-top: #{$i*5}px;}
+    .pb-#{$i*5}{padding-bottom: #{$i*5}px;}
+
+    .mx-#{$i*5}{margin: #{$i*5}px;}
+    .ml-#{$i*5}{margin-left: #{$i*5}px;}
+    .mr-#{$i*5}{margin-right: #{$i*5}px;}
+    .mt-#{$i*5}{margin-top: #{$i*5}px;}
+    .mb-#{$i*5}{margin-bottom: #{$i*5}px;}
+}
+.clearfix{
+    display: table;
+    content: "";
+    clear: both;
+}
+.text-center{
+    text-align: center;
+}
+.container{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.page{
+    padding: 1rem 1rem;
+    margin-top: 1rem;
+    animation: fade-in .4s linear;
+    animation-fill-mode: backwards;
+}
+.pull-left{
+    float: left;
+}
+.pull-right{
+    float: right;
+}
+.notification-box{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    min-width: 35rem;
+    min-height: 6rem;
+    color: #fff;
+    border-radius: 3px;
+    z-index: 99999;
+    padding: 20px 15px;
+    .close{
+        font-size:2.6rem;
+        color: #fff;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 14px 20px;
+        cursor: pointer;
+    } 
+}
+.notification-box.default{
+    background-color: #1565c0;
+}
+.notification-box.danger{
+    background-color: #d22;
+}
+.notification-box.dark{
+    background-color: #222;
+}

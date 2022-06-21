@@ -1,0 +1,127 @@
+
+.input{
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+    outline: none;
+    padding-left: 10px;
+    font-size: 1.4rem;
+    &-sm{
+        line-height: 2.6rem;
+    }
+    &-md{
+        line-height: 2.8rem;
+    }
+    &-lg{
+        line-height: 3.2rem;
+    }
+}
+.select{
+    position: relative;
+    button{
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .options {
+        max-height: 20rem;
+        width: 100%;
+        position: absolute;
+        top: 30px;
+        overflow-y: scroll;
+        border: 1px solid #eee;
+        padding: .5rem;
+        z-index: 9;
+        background-color: #fff;
+        .item{
+
+            border: 1px solid #eee;
+            cursor: pointer;
+            padding: 5px 5px;
+            margin-bottom: 5px;
+            transition: all .4s;
+            p{
+                font-size: 1.4rem;
+                color: #444;
+            }
+            &:hover{
+                background-color: rgba(230, 230, 230, 0.3);
+            }
+            &.active{
+                p{
+                    color: #222;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+    &::after {
+        position: absolute;
+        left: 10px;
+        top: 7px;
+        content: attr(data-value);
+        font-size: 1.4rem;
+    }
+    &.select-disabled{
+        color: #666;
+    }
+}
+.toggle-switch{
+    position: relative;
+    display: inline-block;
+    width: 6rem;
+    height: 2rem;
+    background-color: #1565c0;
+    border: 1px solid #1565c0;
+    transition: all .4s;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    &-sm{ 
+        width: 6rem;
+        height: 2rem;
+        
+    }
+    &-md{ 
+        width: 8rem;
+        height: 2.5rem;
+    }
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .slider{
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 50%;
+        padding-left: 5px;
+        height: 100%;
+        background-color: #d22;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 3px;
+        &::after{
+            content: "OFF";
+        }
+    }
+    input:checked + .slider{
+        right: 0;
+    }
+    input:checked + .slider::after{
+        content: "ON";
+    }
+    &-sm{
+        .slider{
+            padding-left: 3px;
+            padding-top: 0;
+            &::after{
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

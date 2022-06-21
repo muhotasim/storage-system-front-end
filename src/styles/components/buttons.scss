@@ -1,0 +1,62 @@
+.btn{
+    min-width: 8rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all .2s;
+    background-color: transparent;
+    border: 1px solid lightgray;
+    &-sm{
+        min-width: auto;
+        padding: .4rem 1rem;
+    }
+    &-md{
+        padding: .6rem 2rem;
+    }
+    &-lg{
+        padding: 1rem 3rem;
+    }
+    &-light{
+        border: 1px solid lightgray;
+        background-color: #fff;
+        &:hover{
+            background-color: rgb(248, 244, 244);
+        }
+        &:active{
+            background-color: rgb(243, 242, 242);
+        }
+    }
+    &-dark{
+        border: 1px solid #000;
+        background-color: #222;
+        color: #fff;
+        &:hover{
+            background-color: #111;
+        }
+        &:active{
+            background-color: #000;
+        }
+    }
+    &-danger{
+        border: 1px solid #9b061c;
+        background-color: #c4001d;
+        color: #fff;
+        &:hover{
+            background-color: #db0626;
+        }
+        &:active{
+            background-color: #9b041a;
+        }
+    }
+    &-primary{
+        border: 1px solid #003c8f;
+        background-color: #1669c9;
+        color: #fff;
+        &:hover{
+            background-color: #136ace;
+        }
+        &:active{
+            background-color: #105aaf;
+        }
+    }
+}
