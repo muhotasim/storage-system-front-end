@@ -43,7 +43,7 @@ const ModifyUser= props => {
                             
                             apiHandeler.querySystem("user_role",{ 
                                 select: JSON.stringify(['role_id']),
-                                condition: JSON.stringify([{ field: "user_id", condition: "=", value: id }]) 
+                                condition: JSON.stringify([{ field: "user_id", condition: "=", value: `'${id}'` }])
                             })
                             .then(res=>res.json()).then(roleRes=>{
                                

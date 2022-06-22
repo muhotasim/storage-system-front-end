@@ -42,7 +42,7 @@ const ModifyModuleForm = (props) => {
             "system.status as status",
           ]),
           condition: JSON.stringify([
-            { field: "system.id", condition: "=", value: props.id },
+            { field: "system.id", condition: "=", value: `'${props.id}'` },
           ]),
           join: JSON.stringify([
             {
@@ -418,10 +418,10 @@ const ModulePermissions = (props)=>{
     apiHandeler.querySystem("roles",{  }).then(res=>res.json()).then(roleRes=>{
       if(roleRes.type==appConst.successResponseType){
           setRoles(roleRes.data)
-          apiHandeler.querySystem("permissions",{ limit: 9 }).then(res=>res.json()).then(permissionRes=>{
+          apiHandeler.querySystem("permissions",{  }).then(res=>res.json()).then(permissionRes=>{
             if(permissionRes.type==appConst.successResponseType){
               setPermission(permissionRes.data)
-              apiHandeler.querySystem("system_role_permission",{  condition: JSON.stringify([{ field: "system_id", condition: "=", value: props.systemId }]) }).then(res=>res.json()).then(systemPermission=>{
+              apiHandeler.querySystem("system_role_permission",{  condition: JSON.stringify([{ field: "system_id", condition: "=", value: `'${props.systemId}'` }]) }).then(res=>res.json()).then(systemPermission=>{
                 if(systemPermission.type==appConst.successResponseType){
                   let systemPermissionObj = {};
                   systemPermission.data.forEach(permission=>{

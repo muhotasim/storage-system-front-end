@@ -17,14 +17,16 @@ const ModifyPermission = props=>{
     useEffect(()=>{
         
         const apiHandeler = new ApiHandeler(props.userStore.token)
-        
-        apiHandeler.querySystem(permissions,{ condition: JSON.stringify([{ field: "id", condition: "=", value: id }]), }).then(res=>res.json()).then(permissionRes=>{
-            if(permissionRes.type == appConst.successResponseType){
-                const data = permissionRes.data[0]
-                setLabel(data.label)
-                setKey(data.key)
-            }
-        })
+        if(id){
+            apiHandeler.querySystem(permissions,{ condition: JSON.stringify([{ field: "id", condition: "=", value: `'${id}'` }]), }).then(res=>res.json()).then(permissionRes=>{
+                if(permissionRes.type == appConst.successResponseType){
+                    const data = permissionRes.data[0]
+                    setLabel(data.label)
+                    setKey(data.key)
+                }
+            })
+        }
+       
     },[])
     const onSubmit = ()=>{
         if(!label||!key){

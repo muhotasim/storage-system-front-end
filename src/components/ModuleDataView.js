@@ -60,6 +60,7 @@ const ModuleDataView = (props) => {
   const reloadData = (query) => {
     const apiHandeler = new ApiHandeler(props.token);
     setLoading(true);
+    debugger
     apiHandeler
       .count(props.name, query)
       .then((res) => res.json())

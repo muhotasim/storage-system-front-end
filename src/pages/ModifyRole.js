@@ -33,7 +33,7 @@ const ModifyRole= props => {
                             
                             apiHandeler.querySystem("role_permission",{ 
                                 select: JSON.stringify(['permission_id']),
-                                condition: JSON.stringify([{ field: "role_id", condition: "=", value: id }]),
+                                condition: JSON.stringify([{ field: "role_id", condition: "=", value: `'${id}'` }]),
                                 
                             })
                             .then(res=>res.json()).then(permissionRes=>{
