@@ -241,21 +241,20 @@ class ApiHandeler{
             })
         })
     }
-    /******* data *******/ 
-    query(module,query){
-        let url = this.url+"/api/v1/storage/"+module;
-        let urlSearchParama = new URLSearchParams();
-        Object.keys(query).forEach(key=>{
-            urlSearchParama.append(key, query[key]);
-        })
-        url+='?'+urlSearchParama.toString();
+    
+    applyPermission(moduleId, data){
+        const url = this.url+"/api/v1/models/apply-permission";
         return new Promise((resolve,reject)=>{
             fetch(url,{
-                method: "GET",
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+this.token,
                 },
+                body: JSON.stringify({
+                    moduleId: moduleId,
+                    data: data
+                })
             }).then(res=>{
                 resolve(res);
             }).catch(e=>{
@@ -263,6 +262,7 @@ class ApiHandeler{
             })
         })
     }
+    /******* system *******/ 
     querySystem(module,query){
         let url = this.url+"/api/v1/"+module;
         let urlSearchParama = new URLSearchParams();
@@ -283,29 +283,7 @@ class ApiHandeler{
                 reject(e);
             })
         })
-    }
-    count(module,query){
-        let url = this.url+"/api/v1/storage/"+module+'/count';
-        let urlSearchParama = new URLSearchParams();
-        Object.keys(query).forEach(key=>{
-            urlSearchParama.append(key, query[key]);
-        })
-        url+='?'+urlSearchParama.toString();
-        return new Promise((resolve,reject)=>{
-            fetch(url,{
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token,
-                },
-            }).then(res=>{
-                resolve(res);
-            }).catch(e=>{
-                reject(e);
-            })
-        })
-    }
-    
+    }    
     countSystem(module,query){
         let url = this.url+"/api/v1/"+module+'/count';
         let urlSearchParama = new URLSearchParams();
@@ -320,23 +298,6 @@ class ApiHandeler{
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+this.token,
                 },
-            }).then(res=>{
-                resolve(res);
-            }).catch(e=>{
-                reject(e);
-            })
-        })
-    }
-    insert(module,data = {}){
-        const url = this.url+"/api/v1/storage/"+module
-        return new Promise((resolve,reject)=>{
-            fetch(url,{
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token,
-                },
-                body: JSON.stringify(data)
             }).then(res=>{
                 resolve(res);
             }).catch(e=>{
@@ -361,8 +322,104 @@ class ApiHandeler{
             })
         })
     }
-    applyPermission(moduleId, data){
-        const url = this.url+"/api/v1/models/apply-permission";
+    getSystem(module, id){
+        
+        const url = this.url+"/api/v1/"+module+"/"+id
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                },
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
+    updateSystem(id, module, data){
+        const url = this.url+"/api/v1/"+module+"/"+id
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                },
+                body: JSON.stringify(data)
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
+    deleteSystem(module, id){
+        
+        const url = this.url+"/api/v1/"+module+"/"+id
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method:"DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                }
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
+    /******* data *******/ 
+    query(module,query){
+        let url = this.url+"/api/v1/storage/"+module;
+        let urlSearchParama = new URLSearchParams();
+        Object.keys(query).forEach(key=>{
+            urlSearchParama.append(key, query[key]);
+        })
+        url+='?'+urlSearchParama.toString();
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                },
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
+
+    count(module,query){
+        let url = this.url+"/api/v1/storage/"+module+'/count';
+        let urlSearchParama = new URLSearchParams();
+        Object.keys(query).forEach(key=>{
+            urlSearchParama.append(key, query[key]);
+        })
+        url+='?'+urlSearchParama.toString();
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                },
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
+
+    insert(module,data = {}){
+        const url = this.url+"/api/v1/storage/"+module
         return new Promise((resolve,reject)=>{
             fetch(url,{
                 method: "PUT",
@@ -370,10 +427,7 @@ class ApiHandeler{
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+this.token,
                 },
-                body: JSON.stringify({
-                    moduleId: moduleId,
-                    data: data
-                })
+                body: JSON.stringify(data)
             }).then(res=>{
                 resolve(res);
             }).catch(e=>{
@@ -401,6 +455,7 @@ class ApiHandeler{
     insertBulk(data = []){
         
         const url = this.url+"/api/v1/storage"
+        
         return new Promise((resolve,reject)=>{
             resolve({})
         })
@@ -422,42 +477,8 @@ class ApiHandeler{
             })
         })
     }
-    getSystem(module, id){
-        
-        const url = this.url+"/api/v1/"+module+"/"+id
-        return new Promise((resolve,reject)=>{
-            fetch(url,{
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token,
-                },
-            }).then(res=>{
-                resolve(res);
-            }).catch(e=>{
-                reject(e);
-            })
-        })
-    }
     update(id, module, data){
         const url = this.url+"/api/v1/storage/"+module+"/"+id
-        return new Promise((resolve,reject)=>{
-            fetch(url,{
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token,
-                },
-                body: JSON.stringify(data)
-            }).then(res=>{
-                resolve(res);
-            }).catch(e=>{
-                reject(e);
-            })
-        })
-    }
-    updateSystem(id, module, data){
-        const url = this.url+"/api/v1/"+module+"/"+id
         return new Promise((resolve,reject)=>{
             fetch(url,{
                 method: "PATCH",
@@ -500,23 +521,6 @@ class ApiHandeler{
     delete(module, id){
         
         const url = this.url+"/api/v1/storage/"+module+"/"+id
-        return new Promise((resolve,reject)=>{
-            fetch(url,{
-                method:"DELETE",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token,
-                }
-            }).then(res=>{
-                resolve(res);
-            }).catch(e=>{
-                reject(e);
-            })
-        })
-    }
-    deleteSystem(module, id){
-        
-        const url = this.url+"/api/v1/"+module+"/"+id
         return new Promise((resolve,reject)=>{
             fetch(url,{
                 method:"DELETE",
