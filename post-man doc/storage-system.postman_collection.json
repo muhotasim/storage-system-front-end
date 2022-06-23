@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "9845e8a8-df0c-4d18-a519-fe0f6b939bee",
+		"name": "storage-system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Query",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test?select=[]&condition=[]&limit=50&skip=0&join=[]&sortBy=created_at&orderBy=desc&groupBy",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test"
+					],
+					"query": [
+						{
+							"key": "select",
+							"value": "[]"
+						},
+						{
+							"key": "condition",
+							"value": "[]"
+						},
+						{
+							"key": "limit",
+							"value": "50"
+						},
+						{
+							"key": "skip",
+							"value": "0"
+						},
+						{
+							"key": "join",
+							"value": "[]"
+						},
+						{
+							"key": "sortBy",
+							"value": "created_at"
+						},
+						{
+							"key": "orderBy",
+							"value": "desc"
+						},
+						{
+							"key": "groupBy",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test/count?select=[]&condition=[]&join=[]&groupBy=",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test",
+						"count"
+					],
+					"query": [
+						{
+							"key": "select",
+							"value": "[]"
+						},
+						{
+							"key": "condition",
+							"value": "[]"
+						},
+						{
+							"key": "join",
+							"value": "[]"
+						},
+						{
+							"key": "groupBy",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Get Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "admin@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "amd123123",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/token",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Single",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "test",
+							"value": "120",
+							"type": "text"
+						},
+						{
+							"key": "test1",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "test3",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Bulk",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "[{\"test\":\"test1\",\"test2\":\"test2\",\"test3\":\"test3\"},{\"test\":\"test1\",\"test2\":\"test2\",\"test3\":\"test3\"},{\"test\":\"test1\",\"test2\":\"test2\",\"test3\":\"test3\"}]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test/insertBulk",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test",
+						"insertBulk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Single",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "test",
+							"value": "121",
+							"type": "text"
+						},
+						{
+							"key": "test2",
+							"value": "1111",
+							"type": "text"
+						},
+						{
+							"key": "test3",
+							"value": "12",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Bulk",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "test",
+							"value": "12",
+							"type": "text"
+						},
+						{
+							"key": "test2",
+							"value": "111",
+							"type": "text"
+						},
+						{
+							"key": "test3",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test?condition=[{\"andWhere\":0,\"orWhere\":0,\"condition\":\"=\",\"field\":\"id\",\"value\":\"'bfe02971-b7e2-4b02-8dad-b571ea15e762'\"},{\"andWhere\":0,\"orWhere\":1,\"condition\":\"=\",\"field\":\"id\",\"value\":\"'ab8030bb-775d-4bda-8298-b7b05bba0a54'\"}]",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test"
+					],
+					"query": [
+						{
+							"key": "condition",
+							"value": "[{\"andWhere\":0,\"orWhere\":0,\"condition\":\"=\",\"field\":\"id\",\"value\":\"'bfe02971-b7e2-4b02-8dad-b571ea15e762'\"},{\"andWhere\":0,\"orWhere\":1,\"condition\":\"=\",\"field\":\"id\",\"value\":\"'ab8030bb-775d-4bda-8298-b7b05bba0a54'\"}]"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Single",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete With Condition",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{host}}/api/v1/storage/storage_system_test?condition=[{\"andWhere\":0,\"orWhere\":0,\"condition\":\"=\",\"field\":\"test2\",\"value\":\"'111'\"}]",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"storage",
+						"storage_system_test"
+					],
+					"query": [
+						{
+							"key": "condition",
+							"value": "[{\"andWhere\":0,\"orWhere\":0,\"condition\":\"=\",\"field\":\"test2\",\"value\":\"'111'\"}]"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

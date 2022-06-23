@@ -25,10 +25,6 @@ const ModuleDataView = (props) => {
     setSelectFieldOptions(
       props.fields.map((d) => ({ label: d.name, value: d.name }))
     );
-    console.log("mounted");
-  };
-  const onUnMount = () => {
-    console.log("unmounted");
   };
   useEffect(() => {
     // did mount
@@ -50,7 +46,6 @@ const ModuleDataView = (props) => {
 
       }
     }).catch(e=>{
-      console.log(e)
       window.notify(message[appConst.lan].failedToRemove,3000,"danger");
     })
   }
@@ -127,7 +122,6 @@ const ModuleDataView = (props) => {
                 try{
                   document.getElementById("table-filter-btn").click()
                 }catch(e){
-                  console.log(e)
                 }
                 setOpenEditOrUpdateData({ id: null,showForm: false });
             }} token={props.token}/>
