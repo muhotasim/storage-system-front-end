@@ -468,11 +468,11 @@ export const DataForm = ({ tableName ,fields, id = null, afterSaveOrUpdateCallba
   }
 
   return <div className="px-15">
-
+    <Header title={tableName}/>
     <div className="row">
       <div className="col-md-6 col-sm-8 col-xs-12">
       {fields.map((field,index)=>{
-      return <div className="mt-15 mb-5 px-15" key={index}>
+      return <div className="mt-15 mb-5 pt-5" key={index}>
         <label className="d-block pb-5">{field.label}</label>
         <input className="input input-md" value={fieldsData[field.value]} onChange={e=>{
           let newFieldData = {...fieldsData,...{ [field.value]: e.target.value }}
