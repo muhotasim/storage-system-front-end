@@ -29,7 +29,7 @@ const ModuleDataView = (props) => {
   useEffect(() => {
     // did mount
     onMount();
-    return onUnMount;
+  
   }, []);
 
   const deleteData =(d)=>{
