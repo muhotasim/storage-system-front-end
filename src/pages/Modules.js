@@ -55,7 +55,7 @@ const Modules = (props) => {
         window.notify(message[appConst.lan].successSave, 3000, "default")
       }
     }).catch(e=>{
-      console.log(e)
+      window.notify(message[appConst.lan].failedToSave, 3000, "danger")
     })
   }
   const deleteModule = ( e, d )=>{

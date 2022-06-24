@@ -50,12 +50,13 @@ const Permissions = (props) => {
     loadData();
   },[ page ])
   const loadData = ()=>{
-    const apiHandeler = new ApiHandeler(props.userStore.token);
+
+    const apiHandeler = new ApiHandeler(props.userStore.token), conditions = [{ field: "type", condition: "<>", value: `'system'` }];
     setLoading(true)
-    apiHandeler.countSystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(Cres=>{
+    apiHandeler.countSystem(molduleName, { limit: limit, skip: (page-1)*limit, condition: JSON.stringify(conditions) }).then(res=>res.json()).then(Cres=>{
       if(appConst.successResponseType==Cres.type){
         const countData = Cres.data.count;
-        apiHandeler.querySystem(molduleName, { limit: limit, skip: (page-1)*limit }).then(res=>res.json()).then(res=>{
+        apiHandeler.querySystem(molduleName, { limit: limit, skip: (page-1)*limit,  condition: JSON.stringify(conditions) }).then(res=>res.json()).then(res=>{
           if(appConst.successResponseType==res.type){
             const data = res.data.map((d)=>{
               if(!(d.id<=9)){

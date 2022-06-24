@@ -15,7 +15,7 @@ try{
         initialState = JSON.parse(getToken);
     }
 }catch(e){
-    console.error(e)
+    window.alert(e);
 }
 if(getCookie("tokenData")){}
 const userStore = (state = initialState, action = {})=>{

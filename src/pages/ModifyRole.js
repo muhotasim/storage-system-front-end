@@ -20,7 +20,7 @@ const ModifyRole= props => {
         const apiHandeler = new ApiHandeler(props.userStore.token)
         setName('')
         apiHandeler.querySystem("permissions",{ 
-            condition: JSON.stringify([{ field: "id", condition: ">", value: 9 }]), }).then(res=>res.json()).then(permissionRes=>{
+            condition: JSON.stringify([{ field: "type", condition: "=", value: `'view'` }]), }).then(res=>res.json()).then(permissionRes=>{
             if(permissionRes.type==appConst.successResponseType){
                 
                 setPermissions(permissionRes.data)

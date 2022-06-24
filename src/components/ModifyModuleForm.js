@@ -418,7 +418,7 @@ const ModulePermissions = (props)=>{
     apiHandeler.querySystem("roles",{  }).then(res=>res.json()).then(roleRes=>{
       if(roleRes.type==appConst.successResponseType){
           setRoles(roleRes.data)
-          apiHandeler.querySystem("permissions",{  }).then(res=>res.json()).then(permissionRes=>{
+          apiHandeler.querySystem("permissions",{ condition: JSON.stringify([{ field: "type", condition: "=", value: `'system'` }]) }).then(res=>res.json()).then(permissionRes=>{
             if(permissionRes.type==appConst.successResponseType){
               setPermission(permissionRes.data)
               apiHandeler.querySystem("system_role_permission",{  condition: JSON.stringify([{ field: "system_id", condition: "=", value: `'${props.systemId}'` }]) }).then(res=>res.json()).then(systemPermission=>{

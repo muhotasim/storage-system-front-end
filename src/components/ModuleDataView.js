@@ -55,7 +55,6 @@ const ModuleDataView = (props) => {
   const reloadData = (query) => {
     const apiHandeler = new ApiHandeler(props.token);
     setLoading(true);
-    debugger
     apiHandeler
       .count(props.name, query)
       .then((res) => res.json())
@@ -481,8 +480,10 @@ export const DataForm = ({ tableName ,fields, id = null, afterSaveOrUpdateCallba
       </div>
     })}
 
-    <button className="btn btn-md btn-primary pull-right mr-15" onClick={onSaveOrUpdate}> <SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save}</button>
-    <p className="clearfix"></p>
+      <div className="pt-15">
+        <button className="btn btn-md btn-primary pull-right mt-15" onClick={onSaveOrUpdate}> <SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save}</button>
+      </div>
+      <p className="clearfix"></p>
       </div>
     </div>
   </div>

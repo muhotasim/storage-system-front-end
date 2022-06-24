@@ -23,7 +23,7 @@ const Users = (props) => {
   const [ page, setPage ] = useState(1);
   const [ totalPages, setTotalPage ] = useState(1);
   const [ loading, setLoading ] = useState(false);
-  const [ conditon, setCondition ] = useState({ name: "",email: "" })
+  const [ searchVal, setCondition ] = useState({ name: "",email: "" })
 
   
   const editData = d =>{
@@ -75,12 +75,21 @@ const Users = (props) => {
     })
   }
   const changeVal = (key,val)=>{
-    let tempVal = {...conditon,...{ [key]:val }};
+    let tempVal = {...searchVal,...{ [key]:val }};
     
     setCondition(tempVal);
   }
   const onSearch = () =>{
-    const q = { conditons: JSON.stringify([ { orWhere: false,andWhere: false,field: 'name', condition: 'LIKE', value: conditon.name }, { orWhere: false,andWhere: true,field: 'email', condition: 'LIKE', value: conditon.email } ]) }
+    let condition = [ ]
+
+    if(searchVal.name){
+      condition.push({ orWhere: false,andWhere: false,field: 'name', condition: 'LIKE', value: `'%${searchVal.name}%'` })
+    }
+
+    if(searchVal.email){
+      condition.push({ orWhere: true,andWhere: false,field: 'email', condition: 'LIKE', value: `'${searchVal.email}'` })
+    }
+    const q = { condition: JSON.stringify(condition) }
     filterObj = q;
     loadData();
   }
@@ -97,11 +106,11 @@ const Users = (props) => {
           <div className="row">
             <div className="col-md-3">
               <label>Name</label>
-              <input className="input input-md" value={conditon.name} onChange={e=>{changeVal("name",e.target.value)}}/>
+              <input className="input input-md" value={searchVal.name} onChange={e=>{changeVal("name",e.target.value)}}/>
             </div>
             <div className="col-md-3">
               <label>Email</label>
-              <input className="input input-md" value={conditon.email} onChange={e=>{changeVal("email",e.target.value)}}/>
+              <input className="input input-md" value={searchVal.email} onChange={e=>{changeVal("email",e.target.value)}}/>
             </div>
             <div className="col-md-4">
               <div className="mt-5">
