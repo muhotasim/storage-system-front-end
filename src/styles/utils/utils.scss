@@ -55,12 +55,24 @@
         padding: 14px 20px;
         cursor: pointer;
     } 
+    .action-holder{
+        text-align: right;
+    }
 }
 .notification-box.default{
     background-color: #1565c0;
 }
+.notification-box.light{
+    background-color: #fff;
+    color: #222;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 3px rgba(0,0,0,.1);
+}
 .notification-box.danger{
     background-color: #d22;
+    color: #fff;
+    border: 1px solid rgb(145, 21, 21);
+    box-shadow: 2px 2px 3px rgba(145,21,21,.1);
 }
 .notification-box.dark{
     background-color: #222;

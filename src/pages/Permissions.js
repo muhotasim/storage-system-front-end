@@ -30,16 +30,19 @@ const Permissions = (props) => {
   }
   const deleteData = d =>{
     const apiHandeler =  new ApiHandeler(props.userStore.token);
-    apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
-      if(res.type == appConst.successResponseType){
-
-        window.notify(message[appConst.lan].deletedSuccess,3000,"success");
-        loadData()
-      }else{
-        window.notify(message[appConst.lan].failedToRemove,3000,"danger");
-        loadData()
-      }
-    })
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
+        if(res.type == appConst.successResponseType){
+  
+          window.notify(message[appConst.lan].deletedSuccess,3000,"success");
+          loadData()
+        }else{
+          window.notify(message[appConst.lan].failedToRemove,3000,"danger");
+          loadData()
+        }
+      })
+    }})
+    
   }
   useEffect(()=>{
 
@@ -87,13 +90,7 @@ const Permissions = (props) => {
     <Fragment>
       <div className="container page">
         <Header title={message[appConst.lan].pages.permissions.header.title} description={message[appConst.lan].pages.permissions.header.content}/>
-        <div >
-          <button className="btn btn-sm btn-primary pull-right" onClick={(e)=>{
-            e.preventDefault(); 
-            navigate("/permissions/create")
-          }}><PlusOutlined/> {message[appConst.lan].pages.modules.form.add}</button>
-          <p className="clearfix"></p>
-        </div>
+        
         <div className="pt-15 pb-15">
           <Datatable columns={columns} totalPage={totalPages} currentPage={page} data={data} loading={loading} onPageChange={p=>setPage(p)}/>
         </div>

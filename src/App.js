@@ -22,6 +22,16 @@ const LoginBox = lazy(()=>import("./components/LoginBox"));
 
 const App = props=>{
     const [ notifyData, setNotifyData ] = useState({ show: false, message: "", type: "dark" })
+    const [ confirmData, setConfirmData ] = useState({ 
+        show: false,
+        message: "",
+        type: "light",
+        confirmText:"Yes",
+        cancelText:"No",
+        showConfirmBtn: true,
+        showCancelBtn: true,
+        confirmCallback: null,
+        cancelCallback: null })
     useEffect(()=>{
         window.notify = (message, timer, type = "default") => {
             setNotifyData({ show: true, message: message, type })
@@ -29,6 +39,16 @@ const App = props=>{
                 if(window.notify) clearTimeout(window.notify); 
                 setNotifyData({ show: false, message: "",type: "default" })
             },timer)
+        }
+        window.confirmModel = ({ message, type = "light", confirmText = "Yes", cancelText = "No", showConfirmBtn = true, showCancelBtn = true, confirmCallback = null, cancelCallback = null}) => {
+            setConfirmData({ 
+                show: true,
+                message: message,
+                type: type,
+                confirmText:confirmText,
+                cancelText:cancelText,
+                confirmCallback,
+                cancelCallback: cancelCallback,showConfirmBtn, showCancelBtn })
         }
     },[])
     const clearNotifier = ()=>{
@@ -48,6 +68,21 @@ const App = props=>{
                     <span className='close pull-right' onClick={clearNotifier}>&times;</span>
                     <p className='clearfix'></p>
                     <p>{notifyData.message}</p>
+                </div>}
+                
+                {confirmData.show&&<div className={'right-to-left notification-box '+confirmData.type}>
+                    <p className='confirm-message'>{confirmData.message}</p>
+                    <div className='action-holder pt-15'>
+                        {confirmData.showConfirmBtn&&<button className='btn btn-sm btn-primary mr-10' onClick={()=>{
+                            confirmData.confirmCallback();
+                            setConfirmData({  show: false, message: "", type: "light", confirmText:"", cancelText:"", confirmCallback: null,cancelCallback: null })
+
+                        }}>{confirmData.confirmText}</button>}
+                        {confirmData.showCancelBtn&&<button className='btn btn-sm btn-light' onClick={()=>{
+                            if(confirmData.cancelCallback) confirmData.cancelCallback()
+                            setConfirmData({  show: false, message: "", type: "light", confirmText:"", cancelText:"", confirmCallback: null,cancelCallback: null })
+                        }}>{confirmData.cancelText}</button>}
+                    </div>
                 </div>}
             <Navigation menu={menu} history={history}/>
 

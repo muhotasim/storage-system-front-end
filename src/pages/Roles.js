@@ -30,16 +30,19 @@ const Roles = (props) => {
   }
   const deleteData = d =>{
     const apiHandeler =  new ApiHandeler(props.userStore.token);
-    apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
-      if(res.type == appConst.successResponseType){
-
-        window.notify(message[appConst.lan].deletedSuccess,3000,"success");
-        loadData()
-      }else{
-        window.notify(message[appConst.lan].failedToRemove,3000,"danger");
-        loadData()
-      }
-    })
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
+        if(res.type == appConst.successResponseType){
+  
+          window.notify(message[appConst.lan].deletedSuccess,3000,"success");
+          loadData()
+        }else{
+          window.notify(message[appConst.lan].failedToRemove,3000,"danger");
+          loadData()
+        }
+      })
+    }})
+    
   }
   useEffect(()=>{
 

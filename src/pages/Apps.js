@@ -102,12 +102,15 @@ const Apps = (props) => {
   }
   const onDelete = (id) =>{
     const apiHandeler = new ApiHandeler(props.userStore.token);
-    setLoading(true);
-    apiHandeler.deleteApp(id).then(res=>res.json()).then(res=>{
-      getAppsData();
-    }).catch(err=>{
-      setErrorMessage(message[appConst.lan].pages.apps.errors.loadFailed);
-    })
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      setLoading(true);
+      apiHandeler.deleteApp(id).then(res=>res.json()).then(res=>{
+        getAppsData();
+      }).catch(err=>{
+        setErrorMessage(message[appConst.lan].pages.apps.errors.loadFailed);
+      })
+    }})
+    
   }
  const onCancel = ()=>{
     setSelected({

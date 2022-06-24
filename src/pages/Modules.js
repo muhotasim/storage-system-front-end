@@ -61,9 +61,12 @@ const Modules = (props) => {
   const deleteModule = ( e, d )=>{
     e.stopPropagation()
     const apiHandeler = new ApiHandeler(props.userStore.token);
-    apiHandeler.deleteModule(d.module_name).then(res=>res.json()).then(res=>{
-      fetchModulesData();
-    })
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      apiHandeler.deleteModule(d.module_name).then(res=>res.json()).then(res=>{
+        fetchModulesData();
+      })
+    }})
+    
   }
 
   useEffect(()=>{

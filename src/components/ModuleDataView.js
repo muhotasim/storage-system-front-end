@@ -7,6 +7,7 @@ import Datatable from "./Datatable";
 import Header from "./Header";
 import Select from "./Select";
 import Modal from "./Modal"
+import { uuidv4, pressFilterTableBtn } from "../utils";
 let filterObj = {};
 const ModuleDataView = (props) => {
   const [selectFieldOptions, setSelectFieldOptions] = useState([]);
@@ -16,15 +17,28 @@ const ModuleDataView = (props) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+
   const [openEditOrUpdateData, setOpenEditOrUpdateData] = useState({
     showForm: false,
     id: null
   });
   // const [filterObj, setFilterObj] = useState(null);
   const onMount = () => {
+    let tempColumns = [];
     setSelectFieldOptions(
-      props.fields.map((d) => ({ label: d.name, value: d.name }))
+      props.fields.map((d) => ({ label: d.name, value: d.name, type: d?.type?.value, options: d?.options }))
     );
+    props.fields.forEach((c) => {
+      tempColumns.push({ columnName: c.name, displayName: c.name, fieldType: "data" });
+    });
+    tempColumns.push({ columnName: "action", displayName: "Action", fieldType: "node" })
+    setColumns([
+      { displayName: "id", columnName: "id", fieldType: "data" },
+      { displayName: "created_at", columnName: "created_at", fieldType: "data" },
+      { displayName: "updated_at", columnName: "updated_at", fieldType: "data" },...tempColumns]);
+      setTimeout(()=>{
+        pressFilterTableBtn()
+      },400)
   };
   useEffect(() => {
     // did mount
@@ -34,20 +48,23 @@ const ModuleDataView = (props) => {
 
   const deleteData =(d)=>{
     const apiHandeler = new ApiHandeler(props.token);
-    let newQueryObj = {...filterObj,...{skip: 0 * parseInt(filterObj.limit)}}
-    apiHandeler.delete(props.name,d.id).then(res=>res.json()).then(res=>{
-      if(res.type == appConst.successResponseType){
-
-        window.notify(message[appConst.lan].deletedSuccess,3000,"success");
-        reloadData(newQueryObj);
-        setCurrentPage(1)
-        filterObj = newQueryObj
-        // setFilterObj(newQueryObj);
-
-      }
-    }).catch(e=>{
-      window.notify(message[appConst.lan].failedToRemove,3000,"danger");
-    })
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      let newQueryObj = {...filterObj,...{skip: 0 * parseInt(filterObj.limit)}}
+      apiHandeler.delete(props.name,d.id).then(res=>res.json()).then(res=>{
+        if(res.type == appConst.successResponseType){
+  
+          window.notify(message[appConst.lan].deletedSuccess,3000,"success");
+          reloadData(newQueryObj);
+          setCurrentPage(1)
+          filterObj = newQueryObj
+          // setFilterObj(newQueryObj);
+  
+        }
+      }).catch(e=>{
+        window.notify(message[appConst.lan].failedToRemove,3000,"danger");
+      })
+    }})
+   
   }
   const editData =(d)=>{
     setOpenEditOrUpdateData({ id: d.id,showForm: true });
@@ -118,10 +135,7 @@ const ModuleDataView = (props) => {
       }}>
         {openEditOrUpdateData.showForm&&<div>
             <DataForm id={openEditOrUpdateData.id} tableName={props.name} fields={selectFieldOptions} afterSaveOrUpdateCallback={()=>{
-                try{
-                  document.getElementById("table-filter-btn").click()
-                }catch(e){
-                }
+                pressFilterTableBtn();
                 setOpenEditOrUpdateData({ id: null,showForm: false });
             }} token={props.token}/>
           </div>}
@@ -466,19 +480,33 @@ export const DataForm = ({ tableName ,fields, id = null, afterSaveOrUpdateCallba
 
   }
 
-  return <div className="px-15">
+  return <div className="px-15 data-form">
     <Header title={tableName}/>
     <div className="row">
       <div className="col-md-6 col-sm-8 col-xs-12">
-      {fields.map((field,index)=>{
-      return <div className="mt-15 mb-5 pt-5" key={index}>
-        <label className="d-block pb-5">{field.label}</label>
+        <div className="data-form-fields">
+        {fields.map((field,index)=>{
+        if(field.type=="ENUM"){
+            let inputId = uuidv4()
+            return <div className="mt-15 mb-5 pt-5 field-holder" key={index}>
+              <label className="d-block pb-5 field-title">{field.label}</label>
+              <div className="row">
+               {field.options.map((option,index)=><div key={index} className="col-md-4"> <label className="d-block pb-5"> <input checked={fieldsData[field.value]==option} value={option} onChange={(e)=>{
+                let newFieldData = {...fieldsData,...{ [field.value]: e.target.value }}
+                setFieldsData(newFieldData);
+               }} name={inputId} type={"radio"} /> {option}</label> </div>)}
+              </div>
+          </div>
+        }
+      return <div className="mt-15 mb-5 pt-5 field-holder" key={index}>
+        <label className="d-block pb-5 field-title">{field.label}</label>
         <input className="input input-md" value={fieldsData[field.value]} onChange={e=>{
           let newFieldData = {...fieldsData,...{ [field.value]: e.target.value }}
           setFieldsData(newFieldData);
         }}/>
       </div>
     })}
+        </div>
 
       <div className="pt-15">
         <button className="btn btn-md btn-primary pull-right mt-15" onClick={onSaveOrUpdate}> <SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save}</button>

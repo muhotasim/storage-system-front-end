@@ -128,37 +128,41 @@ const ModifyModuleForm = (props) => {
   };
   const removeField = (index) => {
     let tempField = fields;
-    if (props.id) {
-      const apiHandeler = new ApiHandeler(props.token);
-      if (tempField[index].newData) {
+    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+      if (props.id) {
+        const apiHandeler = new ApiHandeler(props.token);
+        
+        if (tempField[index].newData) {
+          tempField.splice(index, 1);
+          setFields([...tempField]);
+        } else {
+          apiHandeler
+            .removeField(name, tempField[index].name)
+            .then((res) => res.json())
+            .then((res) => {
+              if (res.type == appConst.successResponseType) {
+                tempField.splice(index, 1);
+                setFields([...tempField]);
+                window.notify(
+                  message[appConst.lan].deletedSuccess,
+                  3000,
+                  "default"
+                );
+              } else {
+                window.notify(
+                  message[appConst.lan].failedToRemove,
+                  3000,
+                  "danger"
+                );
+              }
+            });
+        }
+      } else {
         tempField.splice(index, 1);
         setFields([...tempField]);
-      } else {
-        apiHandeler
-          .removeField(name, tempField[index].name)
-          .then((res) => res.json())
-          .then((res) => {
-            if (res.type == appConst.successResponseType) {
-              tempField.splice(index, 1);
-              setFields([...tempField]);
-              window.notify(
-                message[appConst.lan].deletedSuccess,
-                3000,
-                "default"
-              );
-            } else {
-              window.notify(
-                message[appConst.lan].failedToRemove,
-                3000,
-                "danger"
-              );
-            }
-          });
       }
-    } else {
-      tempField.splice(index, 1);
-      setFields([...tempField]);
-    }
+    }})
+    
   };
   const updateField = (index) => {
     let tempField = fields[index];
@@ -407,15 +411,20 @@ const ModulePermissions = (props)=>{
       })
     })
     const apiHandeler = new ApiHandeler(props.token)
-    apiHandeler.applyPermission(props.systemId,JSON.stringify(newPermissions)).then(res=>res.json()).then(res=>{
-      if(res.type==appConst.successResponseType){
-        window.notify(
-          message[appConst.lan].successSave, 3000, "default");
-      }else{
-            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
-      }
-    })
+
+    confirmModel({ message: message[appConst.lan].confirmation.applyPermission,confirmCallback:()=>{
+      apiHandeler.applyPermission(props.systemId,JSON.stringify(newPermissions)).then(res=>res.json()).then(res=>{
+        if(res.type==appConst.successResponseType){
+          window.notify(
+            message[appConst.lan].successSave, 3000, "default");
+        }else{
+              window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
+        }
+      })
+    }})
+    
   }
+
 
   useEffect(()=>{
     

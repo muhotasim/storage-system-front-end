@@ -160,6 +160,12 @@ const message = {
     updatedSave: "Updated successfully",
     deletedSuccess: "Deleted successfully",
     noDataFound:"No Data Found",
+    confirmation:{
+      delete: "Are you sure you want to delete this?",
+      update: "Are you sure you want to update this?",
+      create: "Are you sure you want to create this?",
+      applyPermission: "Are you sure you want to apply this permissions for this module ?",
+    },
     loginBox:{
       title: "Login",
       email: "Email",
