@@ -35,6 +35,7 @@ const message = {
           status: "Status",
           fieldList: "Add fields for the module",
           validate: "Please provide all the value currectly to save module",
+          validateSystemFields: "id, created_at, updated_at is system fields please try other names",
           add: "Add",
           remove: "Remove",
           create: "Create",

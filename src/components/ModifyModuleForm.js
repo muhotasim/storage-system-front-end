@@ -106,6 +106,11 @@ const ModifyModuleForm = (props) => {
       status: status ? 1 : 0,
       app_id: app.value,
     };
+    let filedNames = fields.map(d => d.name);
+    if(filedNames.includes('id')||filedNames.includes('created_at')||filedNames.includes('updated_at')){
+      setErrorMessage(message[appConst.lan].pages.modules.form.validateSystemFields);
+      return;
+    }
     if (!name || !title || !fields.length || !app || !validate(fields)) {
       setErrorMessage(message[appConst.lan].pages.modules.form.validate);
       return;
