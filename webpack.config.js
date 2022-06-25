@@ -22,7 +22,7 @@ const config = {
         },
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.(s[ac]ss|css)$/i,
         use: [
           "style-loader",
           "css-loader",
@@ -30,7 +30,7 @@ const config = {
             loader: "sass-loader",
             options: {
               // Prefer `dart-sass`
-              implementation: require("sass"),
+              implementation: require("sass")
             },
           }
         ],

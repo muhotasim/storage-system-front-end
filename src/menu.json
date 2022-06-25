@@ -40,5 +40,16 @@
                 "menu": []
             }
         ]
+    },
+    {
+        "link": "/tokens",
+        "label": "Tokens",
+        "menu": [
+            {
+                "link": "/tokens/create",
+                "label": "Create Token",
+                "menu": []
+            }
+        ]
     }
 ]

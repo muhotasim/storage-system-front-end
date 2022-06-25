@@ -14,9 +14,15 @@ const Users = lazy(()=>import('./pages/Users'));
 const Home = lazy(()=>import('./pages/Modules'));
 const Permissions = lazy(()=>import('./pages/Permissions'));
 const Roles = lazy(()=>import('./pages/Roles'));
+const Tokens = lazy(()=>import('./pages/Tokens'));
+
+
 const ModifyUser = lazy(()=>import('./pages/ModifyUser'));
 const ModifyRole = lazy(()=>import('./pages/ModifyRole'));
 const ModifyPermission =lazy(()=>import('./pages/ModifyPermission'));
+const ModifyToken =lazy(()=>import('./pages/ModifyToken'));
+
+
 
 const LoginBox = lazy(()=>import("./components/LoginBox"));
 
@@ -96,9 +102,14 @@ const App = props=>{
                 <Route exact path="/roles/create" key="role-create" element={<ModifyRole/>}/>
                 <Route exact path="/roles/modify/:id" key="role-edit" element={<ModifyRole/>}/>
 
+
+                <Route exact path="/tokens" element={<Tokens/>}/>
+                <Route exact path="/tokens/create" key="tokens-create" element={<ModifyToken/>}/>
+                <Route exact path="/tokens/modify/:id" key="tokens-edit" element={<ModifyToken/>}/>
+                
                 <Route exact path="/permissions" element={<Permissions/>}/>
-                <Route exact path="/permissions/create" key="role-create" element={<ModifyPermission/>}/>
-                <Route exact path="/permissions/modify/:id" key="role-edit" element={<ModifyPermission/>}/>
+                <Route exact path="/permissions/create" key="permissions-create" element={<ModifyPermission/>}/>
+                <Route exact path="/permissions/modify/:id" key="permissions-edit" element={<ModifyPermission/>}/>
             </Switch>
             </div>
         </Router>

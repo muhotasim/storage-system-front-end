@@ -23,6 +23,18 @@ const message = {
         },
 
       },
+      systems:{
+        header: {
+          title: "Systems",
+          content: "Create and modify tokens",
+        },
+        form: {
+          name:"Name",
+          expiry: "Expiry Date",
+          permissions:"Permissions",
+          noPermission:"No Permission Found"
+        }
+      },
       modules: {
         header: {
           title: "Modules",
