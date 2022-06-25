@@ -13,6 +13,7 @@ const ModifyToken= props => {
     let { id } = useParams();
     const navigate = useNavigate();
     const [ name, setName ] = useState('')
+    const [ numberOfUses, setNumberOfUses ] = useState(-1)
     const [ expiryDate, setExpiryDate ] = useState('');
     const [ modules, setModules ] = useState([]);
     const [ permissions, setPermissions ] = useState([])
@@ -52,11 +53,12 @@ const ModifyToken= props => {
                 
                 setPermissions(permissionRes.data)
                 if(id){
-                    apiHandeler.querySystem("tokens",{ select: JSON.stringify(["id","name","token","created_at","concat(REPLACE(concat(expiry_date),' ','T'),'Z') as expiry_date"]), condition: JSON.stringify([{ field: "id", condition: "=", value: `'${id}'` }])  }).then(res=>res.json()).then(tokenRes=>{
+                    apiHandeler.querySystem("tokens",{ select: JSON.stringify(["id","max_called_times","name","token","created_at","concat(REPLACE(concat(expiry_date),' ','T'),'Z') as expiry_date"]), condition: JSON.stringify([{ field: "id", condition: "=", value: `'${id}'` }])  }).then(res=>res.json()).then(tokenRes=>{
                         let tokenData = tokenRes.data[0];
                         
                         setName(tokenData.name)
                         setExpiryDate(new Date(tokenData.expiry_date))
+                        setNumberOfUses(tokenData.max_called_times)
                         apiHandeler.querySystem("token_system_permission",{  condition: JSON.stringify([{ field: "token_id", condition: "=", value: `'${id}'` }]) }).then(res=>res.json()).then(res=>{
                             let systemPermissionObj = {};
                             res.data.forEach(permission=>{
@@ -97,18 +99,29 @@ const ModifyToken= props => {
           apiHandeler.updateSystem(id,"tokens",{
             name: name,
             expiry_date: expiryDate.toISOString(),
-            permissions: JSON.stringify(newPermissions)
+            permissions: JSON.stringify(newPermissions),
+            max_called_times:numberOfUses
           }).then(res=>res.json()).then((res)=>{
-            debugger
+           if(res.type==appConst.successResponseType) {
+            afterSubmit();
+           }else{
+
+            window.notify(message[appConst.lan].failedToSave,3000,"danger")
+           }
           })
         }else{
             
           apiHandeler.insertSystem("tokens",{
             name: name,
             expiry_date: expiryDate.toISOString(),
-            permissions: JSON.stringify(newPermissions)
+            permissions: JSON.stringify(newPermissions),
+            max_called_times:numberOfUses
           }).then(res=>res.json()).then((res)=>{
+           if(res.type==appConst.successResponseType) {
             afterSubmit();
+           }else{
+            window.notify(message[appConst.lan].failedToSave,3000,"danger")
+           }
           })
           
         }
@@ -144,6 +157,10 @@ const ModifyToken= props => {
                     <label>{message[appConst.lan].pages.systems.form.expiry}</label>
                     <DatePicker selected={expiryDate} showTimeSelect onChange={v=>{setExpiryDate(v)}} dateFormat="Pp" className="input input-md"/>
                     {/* <input className="input input-md" type="date" defaultValue={expiryDate} checked={expiryDate} value={expiryDate} onChange={e=>setExpiryDate(e.target.value)}/> */}
+                </div>
+                <div className="mt-10 mb-15">
+                    <label>Number Of Uses</label>
+                    <input className="input input-md" value={numberOfUses} onChange={e=>setNumberOfUses(e.target.value)}/>
                 </div>
   
                 <div className="mb-15 mt-15">

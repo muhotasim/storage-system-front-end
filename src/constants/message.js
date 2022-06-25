@@ -172,6 +172,7 @@ const message = {
     updatedSave: "Updated successfully",
     deletedSuccess: "Deleted successfully",
     noDataFound:"No Data Found",
+    successCopy:"Successfully copied token",
     confirmation:{
       delete: "Are you sure you want to delete this?",
       update: "Are you sure you want to update this?",

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined, EditOutlined, CopyOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import Header from "../components/Header";
@@ -10,6 +10,7 @@ import ApiHandeler from "../apiHandeler";
 const molduleName  = "tokens";
 const columns = [
   { columnName: "name", displayName: "Name", fieldType: "data" },
+  { columnName: "max_called_times", displayName: "Max Called Times", fieldType: "data" },
   { columnName: "token", displayName: "Token", fieldType: "data" },
   { columnName: "created_at", displayName: "Created At", fieldType: "data" },
   { columnName: "expiry_date", displayName: "Expiry Date", fieldType: "data" },
@@ -33,7 +34,7 @@ const Tokens = (props) => {
       apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
         if(res.type == appConst.successResponseType){
   
-          window.notify(message[appConst.lan].deletedSuccess,3000,"success");
+          window.notify(message[appConst.lan].deletedSuccess,3000,"default");
           loadData()
         }else{
           window.notify(message[appConst.lan].failedToRemove,3000,"danger");
@@ -55,9 +56,17 @@ const Tokens = (props) => {
       if(appConst.successResponseType==Cres.type){
         const countData = Cres.data.count;
         apiHandeler.querySystem(molduleName, { limit: limit, skip: (page-1)*limit, 
-          select: JSON.stringify(["id","name","token","created_at","concat(REPLACE(concat(expiry_date),' ','T'),'Z') as expiry_date"]), }).then(res=>res.json()).then(res=>{
+          select: JSON.stringify(["id","max_called_times","name","token","created_at","concat(REPLACE(concat(expiry_date),' ','T'),'Z') as expiry_date"]), }).then(res=>res.json()).then(res=>{
           if(appConst.successResponseType==res.type){
             const data = res.data.map(d=>{
+              let tempTokenData =  d.token;
+              d.token = <div style={{width: "150px",height: "160px", overflowY: "scroll"}}>
+                <p style={{ wordWrap: 'break-word', fontSize: '11px' }}>{d.token}</p>
+                <p className="mt-5"><button className="btn btn-sm btn-primary pull-right" onClick={()=>{
+                  // navigator.clipboard.writeText(tempTokenData);
+                  window.notify(message[appConst.lan].successCopy,3000,"default");
+                }}><CopyOutlined/></button></p>
+                </div>
               d.action = [<button className="btn btn-sm btn-primary mr-5" onClick={(e)=>{
                 e.stopPropagation()
                 e.preventDefault();

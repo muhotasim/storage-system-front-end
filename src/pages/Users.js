@@ -35,7 +35,7 @@ const Users = (props) => {
 
       apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
         if(res.type == appConst.successResponseType){
-          window.notify(message[appConst.lan].deletedSuccess,3000,"success");
+          window.notify(message[appConst.lan].deletedSuccess,3000,"default");
           loadData()
         }else{
           window.notify(message[appConst.lan].failedToRemove,3000,"danger");
