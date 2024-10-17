@@ -1,66 +1,70 @@
 [
-    {
-        "link": "/",
-        "label": "Apps",
-        "menu": []
-    },
-    {
-        "link": "/modules",
-        "label": "Modules",
-        "menu": []
-    },
-    {
+  {
+    "link": "/",
+    "label": "Apps",
+    "menu": []
+  },
+  {
+    "link": "/modules",
+    "label": "Modules",
+    "menu": []
+  },
+  {
+    "link": "#",
+    "label": "Users Management",
+    "menu": [
+      {
         "link": "/users",
-        "label": "Users",
-        "menu": [
-            {
-                "link": "/users/create",
-                "label": "Create User"
-            }
-        ]
-    },
-    {
-        "link": "/permissions",
-        "label": "Permissions",
-        "menu": [
-            {
-                "link": "/permissions/create",
-                "label": "Create Permission",
-                "menu": []
-            }
-        ]
-    },
-    {
+        "label": "Users"
+      },
+      {
+        "link": "/users/create",
+        "label": "Create User"
+      },
+      {
         "link": "/roles",
-        "label": "Roles",
-        "menu": [
-            {
-                "link": "/roles/create",
-                "label": "Create Role",
-                "menu": []
-            }
-        ]
-    },
-    {
-        "link": "/tokens",
-        "label": "Tokens",
-        "menu": [
-            {
-                "link": "/tokens/create",
-                "label": "Create Token",
-                "menu": []
-            }
-        ]
-    },
-    {
+        "label": "Roles"
+      },
+      {
+        "link": "/roles/create",
+        "label": "Create Role",
+        "menu": []
+      },
+      {
+        "link": "/permissions",
+        "label": "Permissions"
+      },
+      {
+        "link": "/permissions/create",
+        "label": "Create Permission",
+        "menu": []
+      }
+    ]
+  },
+  {
+    "link": "/tokens",
+    "label": "Tokens",
+    "menu": [
+      {
+        "link": "/tokens/create",
+        "label": "Create Token",
+        "menu": []
+      }
+    ]
+  },
+  {
+    "link": "#",
+    "label": "Builder Kit",
+    "menu": [
+      {
         "link": "/form-list",
-        "label": "Form list",
-        "menu": [
-            {
-                "link": "/form-builder/create",
-                "label": "Form Builder",
-                "menu": []
-            }
-        ]
-    }
+        "label": "Form list"
+      },
+      {
+        "link": "/form-builder/create",
+        "label": "Form Builder",
+        "menu": []
+      }
+    ]
+  }
 ]
