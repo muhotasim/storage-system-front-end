@@ -463,7 +463,7 @@ const FormBuilder = (props) => {
                   <input  type="checkbox" value={formMasterConfig.redirect_after_update} onChange={e=>onChangeFormConfig('redirect_after_update',e.target.checked?1:0)}/> Redirect After Update
                   </label>
                 </div>
-                {formMasterConfig.redirect_after_update&&<div className="mt-10 mb-10">
+                {formMasterConfig.redirect_after_update==1&&<div className="mt-10 mb-10">
                   <label>Redirect to</label>
                   <input className="input input-md" value={formMasterConfig.redirect_to} onChange={e=>onChangeFormConfig('redirect_to',e.target.value)}/>
                 </div>}
