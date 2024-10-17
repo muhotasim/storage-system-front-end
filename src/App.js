@@ -23,6 +23,9 @@ const ModifyPermission =lazy(()=>import('./pages/ModifyPermission'));
 const ModifyToken =lazy(()=>import('./pages/ModifyToken'));
 
 
+const FormBuilder =lazy(()=>import('./pages/FormBuilder'));
+
+
 
 const LoginBox = lazy(()=>import("./components/LoginBox"));
 
@@ -110,6 +113,11 @@ const App = props=>{
                 <Route exact path="/permissions" element={<Permissions/>}/>
                 <Route exact path="/permissions/create" key="permissions-create" element={<ModifyPermission/>}/>
                 <Route exact path="/permissions/modify/:id" key="permissions-edit" element={<ModifyPermission/>}/>
+
+                
+
+                <Route exact path="/form-builder/create" element={<FormBuilder/>}/>
+                <Route exact path="/form-builder/modify/:id" element={<FormBuilder/>}/>
             </Switch>
             </div>
         </Router>

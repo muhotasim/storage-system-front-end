@@ -147,6 +147,12 @@ const message = {
           key:"Permission Key",
         }
       },
+      formBuilder:{
+        header: {
+          title: "Create Or Update form",
+          content: "Create and modify form",
+        },
+      }
     },
     statusText:{
       active: "Active",

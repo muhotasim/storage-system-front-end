@@ -499,8 +499,9 @@ export const DataForm = ({ tableName ,fields, id = null, afterSaveOrUpdateCallba
           </div>
         }
       return <div className="mt-15 mb-5 pt-5 field-holder" key={index}>
+
         <label className="d-block pb-5 field-title">{field.label}</label>
-        <input className="input input-md" value={fieldsData[field.value]} onChange={e=>{
+        <input className="input input-md" value={fieldsData[field.value]} placeholder={field.type=='DATE'?'YYYY-MM-DD':field.type} onChange={e=>{
           let newFieldData = {...fieldsData,...{ [field.value]: e.target.value }}
           setFieldsData(newFieldData);
         }}/>

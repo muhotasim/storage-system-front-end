@@ -1,5 +1,5 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ApiHandeler from "../apiHandeler";
 import { connect } from "react-redux"
 import Header from "../components/Header";

@@ -1,0 +1,55 @@
+const formElements = [
+    {
+        name: 'Container',
+        type: 'container',
+        styles: {},
+        childrens: []
+    },
+    {
+        name: 'Label',
+        type: 'label',
+        styles: {}
+    },
+    {
+        name: 'Text Input',
+        type: 'text',
+        styles: {}
+    },
+    {
+        name: 'Textarea',
+        type: 'textarea',
+        styles: {}
+    },
+    {
+        name: 'Checkbox',
+        type: 'checkbox',
+        styles: {}
+    },
+    {
+        name: 'Radio List',
+        type: 'radiolist',
+        styles: {}
+    },
+    {
+        name: 'Datepicker',
+        type: 'datepicker',
+        styles: {}
+    },
+    {
+        name: 'DateRange',
+        type: 'daterange',
+        styles: {}
+    },
+    {
+        name: 'Drop Down',
+        type: 'dropdown',
+        styles: {}
+    },
+    {
+        name: 'Multiple Input Container',
+        type: 'multi_input_container',
+        styles: {}
+    },
+];
+
+export default formElements;

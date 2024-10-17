@@ -8,3 +8,45 @@
         color: #444;
     }
 }
+
+$columns: 15;
+
+@for $i from 1 through $columns {
+  .mt-#{$i} {
+    margin-top: $i*2px;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i*2px;
+  }
+  .ml-#{$i} {
+    margin-left: $i*2px;
+  }
+  .mr-#{$i} {
+    margin-right: $i*2px;
+  }
+  .mx-#{$i} {
+    margin-right: $i*2px;
+    margin-left: $i*2px;
+  }
+  .mx-m-#{$i} {
+    margin-right: -$i*2px;
+    margin-left: -$i*2px;
+  }
+
+  .pt-#{$i} {
+    padding: $i*2px;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i*2px;
+  }
+  .pl-#{$i} {
+    padding-left: $i*2px;
+  }
+  .pr-#{$i} {
+    padding-right: $i*2px;
+  }
+  .px-#{$i} {
+    padding-right: $i*2px;
+    padding-left: $i*2px;
+  }
+}

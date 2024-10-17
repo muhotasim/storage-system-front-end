@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import appConst from "../constants/appConst";
 import { connect } from "react-redux"
 import message from "../constants/message";
 import ApiHandeler from "../apiHandeler";
 import { useNavigate, useParams } from "react-router-dom";
 import { SaveOutlined } from "@ant-design/icons";
-const tokens = "tokens";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const ModifyToken= props => {

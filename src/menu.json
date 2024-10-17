@@ -51,5 +51,16 @@
                 "menu": []
             }
         ]
+    },
+    {
+        "link": "/form-list",
+        "label": "Form list",
+        "menu": [
+            {
+                "link": "/form-builder/create",
+                "label": "Form Builder",
+                "menu": []
+            }
+        ]
     }
 ]
