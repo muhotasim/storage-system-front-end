@@ -147,6 +147,16 @@ const message = {
           key:"Permission Key",
         }
       },
+      systemForms: {
+        header: {
+          title: "Forms",
+          content: "Create and modify form",
+        },
+        form:{
+          label:"System Form Label",
+          key:"System Form Key",
+        }
+      },
       formBuilder:{
         header: {
           title: "Create Or Update form",

@@ -9,6 +9,7 @@ import {
   } from "react-router-dom";
 import Navigation from './components/Navigation';
 import Loader from './components/Loader';
+import SystemForms from './pages/SystemForms';
 const Apps = lazy(()=>import('./pages/Apps'));
 const Users = lazy(()=>import('./pages/Users'));
 const Home = lazy(()=>import('./pages/Modules'));
@@ -113,6 +114,9 @@ const App = props=>{
                 <Route exact path="/permissions" element={<Permissions/>}/>
                 <Route exact path="/permissions/create" key="permissions-create" element={<ModifyPermission/>}/>
                 <Route exact path="/permissions/modify/:id" key="permissions-edit" element={<ModifyPermission/>}/>
+
+                
+                <Route exact path="/form-list" element={<SystemForms/>}/>
 
                 
 

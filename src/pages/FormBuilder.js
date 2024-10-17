@@ -17,10 +17,11 @@ const FormBuilder = (props) => {
   const [modules, setModules] = useState([])
   const [errorMessage, setError] = useState("");
   const [formMasterConfig, setFormMasterConfig] = useState({
-    formName: '',
-    module_id: '',
-    redirectAfterUpdate: false,
-    redirectTo: '',
+    form_name : '',
+    app_id: null,
+    module_id: null,
+    redirect_after_update: 0,
+    redirect_to: '',
   })
   const [editFormJson, setEditFormJson] = useState(null);
   const [fromJson, setFromJson] = useState([]);
@@ -306,18 +307,70 @@ const FormBuilder = (props) => {
   };
 
   const onSaveForm = () => {
+    const apiHandeler = new ApiHandeler(props.userStore.token);
     const data = {
-      formData: formMasterConfig,
+      app_id: formMasterConfig.app_id,
+      form_name: formMasterConfig.form_name,
+      module_id: formMasterConfig.module_id,
+      redirect_after_update: formMasterConfig.redirect_after_update,
+      redirect_to: formMasterConfig.redirect_to,
+      status: 1,
       formJson: fromJson
+    };
+    if(id){
+      apiHandeler.updateSystem(id,'system_forms',data).then(res=>res.json()).then(res=>{
+        if(res.type == appConst.successResponseType){
+            
+          window.notify(message[appConst.lan].updatedSave,3000,"default")
+        }else{
+          
+          window.notify(message[appConst.lan].failedToUpdate,3000,"danger")
+        }
+      })
+    }else{
+      apiHandeler.insertSystemForm(data).then(res=>res.json()).then(res=>{
+        if(res.type == appConst.successResponseType){
+          window.notify(message[appConst.lan].updatedSave,3000,"default")
+            
+        }else{
+          
+          window.notify(message[appConst.lan].failedToUpdate,3000,"danger")
+        }
+    })
     }
-    console.log(data);
   };
   useEffect(() => {
     buildTree(fromJson);
   }, [fromJson]);
 
+  const getFormEditData = ()=>{
+    const apiHandeler = new ApiHandeler(props.userStore.token)
+        if(id){
+            apiHandeler.querySystem('system_forms',{ condition: JSON.stringify([{ field: "id", condition: "=", value: `'${id}'` }]), }).then(res=>res.json()).then( async permissionRes=>{
+                if(permissionRes.type == appConst.successResponseType){
+                    const data = permissionRes.data[0]
+                    setFormMasterConfig({
+                      form_name : data.form_name,
+                      app_id: data.app_id,
+                      module_id: data.module_id,
+                      redirect_after_update: data.redirect_after_update,
+                      redirect_to: data.redirect_to,
+                    })
+                    if(data){
+                      const formData = await fetch(appConst.apiUrl+'/'+data.form_json_location)
+                      const formDataJson = await formData.json()
+                      setFromJson(formDataJson)
+                    }
+                }
+            })
+        }
+  }
+
   useEffect(()=>{
     fetchModulesData();
+    if(id){
+      getFormEditData()
+    }
   },[])
 
   return (
@@ -395,7 +448,7 @@ const FormBuilder = (props) => {
                 <label className="bold">Default Form Values</label>
                 <div className="mt-10 mb-10">
                   <label>Form Name</label>
-                  <input className="input input-md" value={formMasterConfig.formName} onChange={e=>onChangeFormConfig('formName',e.target.value)}/>
+                  <input className="input input-md" value={formMasterConfig.form_name } onChange={e=>onChangeFormConfig('form_name',e.target.value)}/>
                 </div>
                 <div className="mt-10 mb-10">
                   <label>Module Name</label>
@@ -407,12 +460,12 @@ const FormBuilder = (props) => {
                 </div>
                 <div className="mt-10 mb-10">
                   <label>
-                  <input  type="checkbox" value={formMasterConfig.redirectAfterUpdate} onChange={e=>onChangeFormConfig('redirectAfterUpdate',e.target.checked)}/> Redirect After Update
+                  <input  type="checkbox" value={formMasterConfig.redirect_after_update} onChange={e=>onChangeFormConfig('redirect_after_update',e.target.checked?1:0)}/> Redirect After Update
                   </label>
                 </div>
-                {formMasterConfig.redirectAfterUpdate&&<div className="mt-10 mb-10">
+                {formMasterConfig.redirect_after_update&&<div className="mt-10 mb-10">
                   <label>Redirect to</label>
-                  <input className="input input-md" value={formMasterConfig.redirectTo} onChange={e=>onChangeFormConfig('redirectTo',e.target.value)}/>
+                  <input className="input input-md" value={formMasterConfig.redirect_to} onChange={e=>onChangeFormConfig('redirect_to',e.target.value)}/>
                 </div>}
 
                 </div>

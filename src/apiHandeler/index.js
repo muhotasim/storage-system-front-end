@@ -435,6 +435,24 @@ class ApiHandeler{
             })
         })
     }
+    
+    insertSystemForm(data = {}){
+        const url = this.url+"/api/v1/system_forms"
+        return new Promise((resolve,reject)=>{
+            fetch(url,{
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+this.token,
+                },
+                body: JSON.stringify(data)
+            }).then(res=>{
+                resolve(res);
+            }).catch(e=>{
+                reject(e);
+            })
+        })
+    }
     insertUser(module,data = {}){
         const url = this.url+"/api/v1/"+module
         return new Promise((resolve,reject)=>{
