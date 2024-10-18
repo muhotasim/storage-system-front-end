@@ -1,32 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import appConst from "../constants/appConst";
 import { connect } from "react-redux";
 import message from "../constants/message";
 import ApiHandeler from "../apiHandeler";
 import { useNavigate, useParams } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, SaveOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SaveOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import formElements from "../constants/formElements";
 import Modal from "../components/Modal";
 import Select from "../components/Select";
+import { Formik } from "formik";
 const roles = "roles";
-
+import * as Yup from 'yup';
 const FormBuilder = (props) => {
   let { id } = useParams();
   const navigate = useNavigate();
-  const [modules, setModules] = useState([])
+  const [modules, setModules] = useState([]);
   const [errorMessage, setError] = useState("");
+  const formRef = useRef();
   const [formMasterConfig, setFormMasterConfig] = useState({
-    form_name : '',
+    form_name: "",
     app_id: null,
     module_id: null,
     redirect_after_update: 0,
-    redirect_to: '',
-  })
+    redirect_to: "",
+  });
   const [editFormJson, setEditFormJson] = useState(null);
   const [fromJson, setFromJson] = useState([]);
   const [fromNestedJson, setFromNestedJson] = useState([]);
-  const [openLivePreview, setOpenLivePreview] = useState(false)
+  const [openLivePreview, setOpenLivePreview] = useState(false);
   const [dragingElement, setDragingElement] = useState({
     dragging: false,
     elementName: null,
@@ -34,17 +41,21 @@ const FormBuilder = (props) => {
   });
   const fetchModulesData = () => {
     const apiHandeler = new ApiHandeler(props.userStore.token);
-    apiHandeler.getAllModuleData().then(res=>res.json()).then(res=>{
-      // console.log({res})
-      setModules(res.data.map(d=>(
-        {
-          label: d.module_name,
-          value: d.id
-        }
-      )))
-    })
-  }
-  const onChangeFormConfig = (key, value)=>setFormMasterConfig({...formMasterConfig, [key]: value})
+    apiHandeler
+      .getAllModuleData()
+      .then((res) => res.json())
+      .then((res) => {
+        // console.log({res})
+        setModules(
+          res.data.map((d) => ({
+            label: d.module_name,
+            value: d.id,
+          }))
+        );
+      });
+  };
+  const onChangeFormConfig = (key, value) =>
+    setFormMasterConfig({ ...formMasterConfig, [key]: value });
   const onChangeEditFormJson = (e) =>
     setEditFormJson({
       ...editFormJson,
@@ -129,11 +140,10 @@ const FormBuilder = (props) => {
     let masterElement = formElements.find(
       (d) => d.type == dragingElement.elementName
     );
-    if( data.name == "container" ){
-
+    if (data.name == "container") {
       let containerIndex = tempFromJson.findIndex((d) => d.d_id == data.d_id);
-      if((event.clientY-targetRect.top)<=8){
-        mid =  data.m_id;
+      if (event.clientY - targetRect.top <= 8) {
+        mid = data.m_id;
         if (containerIndex != -1) {
           tempFromJson.splice(containerIndex, 0, {
             type: masterElement.type,
@@ -144,30 +154,30 @@ const FormBuilder = (props) => {
             input_class: "",
             input_style: "",
             required: false,
-            placeholder: '',
-            default_value: '',
+            placeholder: "",
+            default_value: "",
             options: "[]",
           });
         }
-        console.log('place before container');
-        
+        console.log("place before container");
+
         setFromJson(tempFromJson);
         return;
-      }else if(((targetRect.top + targetRect.height )-event.clientY)<=8){
-        mid =  data.m_id;
-        console.log('place after container');
+      } else if (targetRect.top + targetRect.height - event.clientY <= 8) {
+        mid = data.m_id;
+        console.log("place after container");
         if (!nextSiblingOfDropTarget) {
           tempFromJson.push({
             type: masterElement.type,
             name: masterElement.name,
             d_id: tempFromJson.length + 1,
-            placeholder: '',
+            placeholder: "",
             m_id: mid,
             input_name: "",
             input_class: "",
             input_style: "",
             required: false,
-            default_value: '',
+            default_value: "",
             options: "[]",
           });
         } else {
@@ -179,16 +189,16 @@ const FormBuilder = (props) => {
               type: masterElement.type,
               name: masterElement.name,
               d_id: tempFromJson.length + 1,
-              placeholder: '',
+              placeholder: "",
               m_id: mid,
               input_name: "",
               input_class: "",
               input_style: "",
               required: false,
-              default_value: '',
+              default_value: "",
               options: "[]",
             });
-          } 
+          }
         }
         setFromJson(tempFromJson);
         return;
@@ -206,8 +216,8 @@ const FormBuilder = (props) => {
           input_class: "",
           input_style: "",
           required: false,
-          placeholder: '',
-          default_value: '',
+          placeholder: "",
+          default_value: "",
           options: "[]",
         });
       } else {
@@ -219,9 +229,9 @@ const FormBuilder = (props) => {
           input_name: "",
           input_class: "",
           input_style: "",
-          placeholder: '',
+          placeholder: "",
           required: false,
-          default_value: '',
+          default_value: "",
           options: "[]",
         });
       }
@@ -231,13 +241,13 @@ const FormBuilder = (props) => {
           type: masterElement.type,
           name: masterElement.name,
           d_id: tempFromJson.length + 1,
-          placeholder: '',
+          placeholder: "",
           m_id: mid,
           input_name: "",
           input_class: "",
           input_style: "",
           required: false,
-          default_value: '',
+          default_value: "",
           options: "[]",
         });
       } else {
@@ -249,13 +259,13 @@ const FormBuilder = (props) => {
             type: masterElement.type,
             name: masterElement.name,
             d_id: tempFromJson.length + 1,
-            placeholder: '',
+            placeholder: "",
             m_id: mid,
             input_name: "",
             input_class: "",
             input_style: "",
             required: false,
-            default_value: '',
+            default_value: "",
             options: "[]",
           });
         } else {
@@ -263,13 +273,13 @@ const FormBuilder = (props) => {
             type: masterElement.type,
             name: masterElement.name,
             d_id: tempFromJson.length + 1,
-            placeholder: '',
+            placeholder: "",
             m_id: mid,
             input_name: "",
             input_class: "",
             input_style: "",
             required: false,
-            default_value: '',
+            default_value: "",
             options: "[]",
           });
         }
@@ -306,72 +316,86 @@ const FormBuilder = (props) => {
     setFromNestedJson(rootObjects);
   };
 
-  const onSaveForm = () => {
+  const onSaveForm = (values, setSubmitting) => {
+    setSubmitting(true);
     const apiHandeler = new ApiHandeler(props.userStore.token);
     const data = {
       app_id: formMasterConfig.app_id,
-      form_name: formMasterConfig.form_name,
+      form_name: values.form_name,
       module_id: formMasterConfig.module_id,
       redirect_after_update: formMasterConfig.redirect_after_update,
       redirect_to: formMasterConfig.redirect_to,
       status: 1,
-      formJson: fromJson
+      formJson: fromJson,
     };
-    if(id){
-      apiHandeler.updateSystem(id,'system_forms',data).then(res=>res.json()).then(res=>{
-        if(res.type == appConst.successResponseType){
-            
-          window.notify(message[appConst.lan].updatedSave,3000,"default")
-        }else{
-          
-          window.notify(message[appConst.lan].failedToUpdate,3000,"danger")
-        }
-      })
-    }else{
-      apiHandeler.insertSystemForm(data).then(res=>res.json()).then(res=>{
-        if(res.type == appConst.successResponseType){
-          window.notify(message[appConst.lan].updatedSave,3000,"default")
-            
-        }else{
-          
-          window.notify(message[appConst.lan].failedToUpdate,3000,"danger")
-        }
-    })
+    if (id) {
+      apiHandeler
+        .updateSystem(id, "system_forms", data)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.type == appConst.successResponseType) {
+            window.notify(message[appConst.lan].updatedSave, 3000, "default");
+          } else {
+            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
+          }
+          setSubmitting(false);
+        });
+    } else {
+      apiHandeler
+        .insertSystemForm(data)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.type == appConst.successResponseType) {
+            window.notify(message[appConst.lan].updatedSave, 3000, "default");
+          } else {
+            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
+          }
+          setSubmitting(false);
+        });
     }
   };
   useEffect(() => {
     buildTree(fromJson);
   }, [fromJson]);
 
-  const getFormEditData = ()=>{
-    const apiHandeler = new ApiHandeler(props.userStore.token)
-        if(id){
-            apiHandeler.querySystem('system_forms',{ condition: JSON.stringify([{ field: "id", condition: "=", value: `'${id}'` }]), }).then(res=>res.json()).then( async permissionRes=>{
-                if(permissionRes.type == appConst.successResponseType){
-                    const data = permissionRes.data[0]
-                    setFormMasterConfig({
-                      form_name : data.form_name,
-                      app_id: data.app_id,
-                      module_id: data.module_id,
-                      redirect_after_update: data.redirect_after_update,
-                      redirect_to: data.redirect_to,
-                    })
-                    if(data){
-                      const formData = await fetch(appConst.apiUrl+'/'+data.form_json_location)
-                      const formDataJson = await formData.json()
-                      setFromJson(formDataJson)
-                    }
-                }
-            })
-        }
-  }
-
-  useEffect(()=>{
-    fetchModulesData();
-    if(id){
-      getFormEditData()
+  const getFormEditData = () => {
+    const apiHandeler = new ApiHandeler(props.userStore.token);
+    if (id) {
+      apiHandeler
+        .querySystem("system_forms", {
+          condition: JSON.stringify([
+            { field: "id", condition: "=", value: `'${id}'` },
+          ]),
+        })
+        .then((res) => res.json())
+        .then(async (permissionRes) => {
+          if (permissionRes.type == appConst.successResponseType) {
+            const data = permissionRes.data[0];
+            setFormMasterConfig({
+              form_name: data.form_name,
+              app_id: data.app_id,
+              module_id: data.module_id,
+              redirect_after_update: data.redirect_after_update,
+              redirect_to: data.redirect_to,
+            });
+            if (data) {
+              const formData = await fetch(
+                appConst.apiUrl + "/" + data.form_json_location
+              );
+              const formDataJson = await formData.json();
+              setFromJson(formDataJson);
+            }
+          }
+        });
     }
-  },[])
+  };
+
+  useEffect(() => {
+    fetchModulesData();
+    if (id) {
+      getFormEditData();
+    }
+  }, []);
 
   return (
     <div className="container page">
@@ -393,333 +417,465 @@ const FormBuilder = (props) => {
               </div>
             </div>
           )}
-          <button
+      
+          {/* <button className="btn btn-md btn-primary mt-15 pull-right" onClick={()=>{}}><SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save} </button> */}
+          <Formik
+            initialValues={formMasterConfig}
+            enableReinitialize
+            validationSchema={Yup.object({
+              form_name: Yup.string().required('Required'),
+            })}
+            onSubmit={(values, { setSubmitting }) => {
+              onSaveForm(values,setSubmitting);
+            }}
+          >
+            
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              <form onSubmit={handleSubmit}>
+                    <button
             className="btn btn-md btn-primary pull-right"
-            onClick={onSaveForm}
+            // onClick={onSaveForm}
+            disabled={isSubmitting}
+            type="submit"
           >
             <SaveOutlined /> Save Form
           </button>
           <button
             className="btn btn-md btn-primary pull-right mr-5"
-            onClick={()=>{setOpenLivePreview(true)}}
+            onClick={() => {
+              setOpenLivePreview(true);
+            }}
           >
-          <EyeOutlined/>  Live Preview
+            <EyeOutlined /> Live Preview
           </button>
           <p className="clearfix"></p>
-          {/* <button className="btn btn-md btn-primary mt-15 pull-right" onClick={()=>{}}><SaveOutlined/> {id?message[appConst.lan].form.update:message[appConst.lan].form.save} </button> */}
-          <div className="mb-15 mt-15">
-            <div className="form-builder__container">
-              <div className="form-element__container">
-                {formElements.map((element, index) => {
-                  return (
-                    <DraggableComponent
-                      element={element}
-                      key={index}
-                      onDragStart={onDragStart}
-                      onDragEnd={onDragEnd}
-                    />
-                  );
-                })}
-              </div>
-              <div
-                className="form-editor__page"
-                data-name={"container"}
-                data-d_id={0}
-                style={{
-                  border: "1px solid",
-                  borderColor: dragingElement.dragging ? "#1975df" : "lightgray",
-                }}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-              >
-                {fromNestedJson.map((element, index) => {
-                  return (
-                    <BuilderRenderer
-                      element={element}
-                      key={element.d_id}
-                      removeFormElement={removeFormElement}
-                      editFormElement={editFormElement}
-                    />
-                  );
-                })}
-              </div>
-              <div className="form-element__container">
-                <div  className="px-5">
-                <label className="bold">Default Form Values</label>
-                <div className="mt-10 mb-10">
-                  <label>Form Name</label>
-                  <input className="input input-md" value={formMasterConfig.form_name } onChange={e=>onChangeFormConfig('form_name',e.target.value)}/>
-                </div>
-                <div className="mt-10 mb-10">
-                  <label>Module Name</label>
-                  <Select options={modules} value={formMasterConfig.module_id} onSelect={val=>{
-                    console.log(val);
-                    
-                    onChangeFormConfig('module_id',val)
-                  }}/>
-                </div>
-                <div className="mt-10 mb-10">
-                  <label>
-                  <input  type="checkbox" value={formMasterConfig.redirect_after_update} onChange={e=>onChangeFormConfig('redirect_after_update',e.target.checked?1:0)}/> Redirect After Update
-                  </label>
-                </div>
-                {formMasterConfig.redirect_after_update==1&&<div className="mt-10 mb-10">
-                  <label>Redirect to</label>
-                  <input className="input input-md" value={formMasterConfig.redirect_to} onChange={e=>onChangeFormConfig('redirect_to',e.target.value)}/>
-                </div>}
-
-                </div>
-                {editFormJson && (
-                  <div className="px-5">
-                    <div className="mb-5 pb-5">
-                      <label className="bold">Element Edit Options</label>
-                    </div>
-                    {[
-                      "Text Input",
-                      "Textarea",
-                      "Checkbox",
-                      "Radio List",
-                      "Datepicker",
-                      "DateRange",
-                      "Drop Down",
-                      "Multiple Input Container",
-                    ].includes(editFormJson.name) && (
-                      <div className="mt-5">
-                        <label>Name</label>
-                        <input
-                          className="input input-md"
-                          name="input_name"
-                          value={editFormJson.input_name}
-                          onChange={onChangeEditFormJson}
-                        />
+                <div className="mb-15 mt-15">
+                  <div className="form-builder__container">
+                    <div className="form-element__container">
+                      <div className="form-element__holder">
+                        {formElements.map((element, index) => {
+                          return (
+                            <DraggableComponent
+                              element={element}
+                              key={index}
+                              onDragStart={onDragStart}
+                              onDragEnd={onDragEnd}
+                            />
+                          );
+                        })}
                       </div>
-                    )}
-                    {[
-                      "Text Input",
-                      "Textarea",
-                      "Datepicker",
-                      "DateRange",
-                      "Drop Down",
-                    ].includes(editFormJson.name) && (
-                      <div className="mt-5">
-                        <label>Placeholder</label>
-                        <input
-                          className="input input-md"
-                          name="placeholder"
-                          value={editFormJson.placeholder}
-                          onChange={onChangeEditFormJson}
-                        />
-                      </div>
-                    )}
-                    <div className="mt-5 mb-5">
-                      <label>Class</label>
-                      <input
-                        className="input input-md"
-                        name="input_class"
-                        value={editFormJson.input_class}
-                        onChange={onChangeEditFormJson}
-                      />
                     </div>
-                    <div className="mt-5 mb-5">
-                      <label>Default Value</label>
-                      <input
-                        className="input input-md"
-                        name="default_value"
-                        value={editFormJson.default_value}
-                        onChange={onChangeEditFormJson}
-                      />
+                    <div
+                      className="form-editor__page"
+                      data-name={"container"}
+                      data-d_id={0}
+                      style={{
+                        border: "1px solid",
+                        borderColor: dragingElement.dragging
+                          ? "#1975df"
+                          : "lightgray",
+                      }}
+                      onDragOver={onDragOver}
+                      onDrop={onDrop}
+                    >
+                      {fromNestedJson.map((element, index) => {
+                        return (
+                          <BuilderRenderer
+                            element={element}
+                            key={element.d_id}
+                            removeFormElement={removeFormElement}
+                            editFormElement={editFormElement}
+                          />
+                        );
+                      })}
                     </div>
-                    <div className="mt-5 mb-5">
-                      <label>Style</label>
-                      <input
-                        className="input input-md"
-                        name="input_style"
-                        value={editFormJson.input_style}
-                        onChange={onChangeEditFormJson}
-                      />
-                    </div>
-                    {[
-                      "Text Input",
-                      "Textarea",
-                      "Checkbox",
-                      "Radio List",
-                      "Datepicker",
-                      "DateRange",
-                      "Drop Down",
-                      "Multiple Input Container",
-                    ].includes(editFormJson.name) && (
-                      <div className="mt-5 mb-5">
-                        <label>
+                    <div className="form-element__container">
+                      <div className="px-5">
+                        <label className="bold">Default Form Values</label>
+                        <div className="mt-10 mb-10">
+                          <label>Form Name</label>
                           <input
-                            checked={editFormJson.required}
-                            type="checkbox"
-                            name="required"
-                            onChange={onChangeEditFormJson}
-                          />{" "}
-                          Required
-                        </label>
-                      </div>
-                    )}
-                    {[
-                      "Radio List",
-                      "Drop Down",
-                    ].includes(editFormJson.name) && (
-                      <div className="mt-5 mb-5">
-                        <label>
-                            Options
-                        </label>
-                          <textarea
-                            type="options"
                             className="input input-md"
-                            name="options"
-                            onChange={onChangeEditFormJson}
-                          >
-                            {editFormJson.options}
-                          </textarea>
+                            value={values.form_name}
+                            name="form_name"
+                            onBlur={handleBlur}
+                            onChange={handleChange
+                              // handleChange("form_name", e.target.value)
+                            }
+                          />
+                          {errors.form_name && touched.form_name && errors.form_name}
+                        </div>
+                        <div className="mt-10 mb-10">
+                          <label>Module Name</label>
+                          <Select
+                            options={modules}
+                            value={formMasterConfig.module_id}
+                            onSelect={(val) => {
+                              onChangeFormConfig("module_id", val);
+                            }}
+                          />
+                        </div>
+                        <div className="mt-10 mb-10">
+                          <label>
+                            <input
+                              type="checkbox"
+                              value={formMasterConfig.redirect_after_update}
+                              onChange={(e) =>
+                                onChangeFormConfig(
+                                  "redirect_after_update",
+                                  e.target.checked ? 1 : 0
+                                )
+                              }
+                            />{" "}
+                            Redirect After Update
+                          </label>
+                        </div>
+                        {formMasterConfig.redirect_after_update == 1 && (
+                          <div className="mt-10 mb-10">
+                            <label>Redirect to</label>
+                            <input
+                              className="input input-md"
+                              value={formMasterConfig.redirect_to}
+                              onChange={(e) =>
+                                onChangeFormConfig(
+                                  "redirect_to",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {/* <div className="mt-5 mb-5">
-                                    <label>Dropdown Options</label>
-                                    <input className="input input-md"  name="input_name" value={editFormJson.input_name}/>
-                                </div> */}
+                      {editFormJson && (
+                        <div className="px-5">
+                          <div className="mb-5 pb-5">
+                            <label className="bold">Element Edit Options</label>
+                          </div>
+                          {[
+                            "Text Input",
+                            "Textarea",
+                            "Checkbox",
+                            "Radio List",
+                            "Datepicker",
+                            "DateRange",
+                            "Drop Down",
+                            "Multiple Input Container",
+                          ].includes(editFormJson.name) && (
+                            <div className="mt-5">
+                              <label>Name</label>
+                              <input
+                                className="input input-md"
+                                name="input_name"
+                                value={editFormJson.input_name}
+                                onChange={onChangeEditFormJson}
+                              />
+                            </div>
+                          )}
+                          {[
+                            "Text Input",
+                            "Textarea",
+                            "Datepicker",
+                            "DateRange",
+                            "Drop Down",
+                          ].includes(editFormJson.name) && (
+                            <div className="mt-5">
+                              <label>Placeholder</label>
+                              <input
+                                className="input input-md"
+                                name="placeholder"
+                                value={editFormJson.placeholder}
+                                onChange={onChangeEditFormJson}
+                              />
+                            </div>
+                          )}
+                          <div className="mt-5 mb-5">
+                            <label>Class</label>
+                            <input
+                              className="input input-md"
+                              name="input_class"
+                              value={editFormJson.input_class}
+                              onChange={onChangeEditFormJson}
+                            />
+                          </div>
+                          <div className="mt-5 mb-5">
+                            <label>Default Value</label>
+                            <input
+                              className="input input-md"
+                              name="default_value"
+                              value={editFormJson.default_value}
+                              onChange={onChangeEditFormJson}
+                            />
+                          </div>
+                          <div className="mt-5 mb-5">
+                            <label>Style</label>
+                            <input
+                              className="input input-md"
+                              name="input_style"
+                              value={editFormJson.input_style}
+                              onChange={onChangeEditFormJson}
+                            />
+                          </div>
+                          {[
+                            "Text Input",
+                            "Textarea",
+                            "Checkbox",
+                            "Radio List",
+                            "Datepicker",
+                            "DateRange",
+                            "Drop Down",
+                            "Multiple Input Container",
+                          ].includes(editFormJson.name) && (
+                            <div className="mt-5 mb-5">
+                              <label>
+                                <input
+                                  checked={editFormJson.required}
+                                  type="checkbox"
+                                  name="required"
+                                  onChange={onChangeEditFormJson}
+                                />{" "}
+                                Required
+                              </label>
+                            </div>
+                          )}
+                          {["Radio List", "Drop Down"].includes(
+                            editFormJson.name
+                          ) && (
+                            <div className="mt-5 mb-5">
+                              <label>Options</label>
+                              <textarea
+                                type="options"
+                                className="input input-md"
+                                name="options"
+                                onChange={onChangeEditFormJson}
+                              >
+                                {editFormJson.options}
+                              </textarea>
+                            </div>
+                          )}
 
-                    <div>
-                      <button
-                        className="btn btn-sm btn-primary mx-5"
-                        onClick={onSaveEdit}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => {
-                          setEditFormJson(null);
-                        }}
-                      >
-                        Cancel
-                      </button>
+                          <div>
+                            <button
+                              className="btn btn-sm btn-primary mx-5"
+                              onClick={onSaveEdit}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => {
+                                setEditFormJson(null);
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
+                </div>
+              </form>
+            )}
+          </Formik>
         </div>
       </div>
-      <Modal title={"Live Preview"} show={openLivePreview} onClose={()=>{setOpenLivePreview(false)}}>
-        <div>
-            {openLivePreview&&<LivePreview formJson={fromJson}/>}
-        </div>  
-        </Modal>
+      <Modal
+        title={"Live Preview"}
+        show={openLivePreview}
+        onClose={() => {
+          setOpenLivePreview(false);
+        }}
+      >
+        <div>{openLivePreview && <LivePreview formJson={fromJson} />}</div>
+      </Modal>
     </div>
   );
 };
 
-const LivePreview = ({ formJson = [] })=>{
-
-    const [nestedFormJson, setNestedFormJson] = useState([])
-    const [formState, setFormState] = useState([])
-    const buildTree = (json = []) => {
-        let parentObj = {};
-        let rootObjects = [];
-        json.forEach((elm) => {
-          if (elm.type == "container") {
-            parentObj[elm.d_id] = { ...elm, childrens: [] };
-          } else {
-            parentObj[elm.d_id] = { ...elm };
-          }
-        });
-    
-        json.forEach((elm) => {
-          if (parentObj[elm.m_id]) {
-            parentObj[elm.m_id].childrens.push(parentObj[elm.d_id]);
-          } else {
-            rootObjects.push(parentObj[elm.d_id]);
-          }
-        });
-
-        return rootObjects
-      };
-
-      useEffect(()=>{
-        let formStateObj = {};
-        let formElm = [
-            "text",
-            "textarea",
-            "checkbox",
-            "radiolist",
-            "datepicker",
-            "daterange",
-            "dropdown",
-            "multi_input_container"
-        ]
-        for(let elm of formJson){
-            if(formElm.includes(elm.type)){
-                formStateObj[elm.input_name] = elm.default_value;
-            }
-        }
-        const treeData = buildTree(formJson);
-        setNestedFormJson(treeData)
-        setFormState(formStateObj)
-      },[formJson])
-      const onChangeFormState = (key, value)=>{
-        setFormState({...formState, [key]: value})
+const LivePreview = ({ formJson = [] }) => {
+  const [nestedFormJson, setNestedFormJson] = useState([]);
+  const [formState, setFormState] = useState([]);
+  const buildTree = (json = []) => {
+    let parentObj = {};
+    let rootObjects = [];
+    json.forEach((elm) => {
+      if (elm.type == "container") {
+        parentObj[elm.d_id] = { ...elm, childrens: [] };
+      } else {
+        parentObj[elm.d_id] = { ...elm };
       }
-      
+    });
 
-    return <>
-        <div>
-            {nestedFormJson.map(((data, index)=><FormRenderer treeData={data} key={index} formState={formState} onChangeFormState={onChangeFormState}/>))}
-        </div>
-    </>
-}
+    json.forEach((elm) => {
+      if (parentObj[elm.m_id]) {
+        parentObj[elm.m_id].childrens.push(parentObj[elm.d_id]);
+      } else {
+        rootObjects.push(parentObj[elm.d_id]);
+      }
+    });
 
-const FormRenderer = ({treeData, formState, onChangeFormState})=>{
+    return rootObjects;
+  };
 
-    switch(treeData.type){
-        case "container":
-            return <div className={treeData.input_class}>
-                 {treeData.childrens.map(((data, index)=><FormRenderer treeData={data} key={index}  formState={formState} onChangeFormState={onChangeFormState}/>))}
-            </div>
-        break;
-        case "label":
-            return <label  className={treeData.input_class}>{treeData.default_value}</label>
-
-        break;
-        case "text":
-        return  <input  className={treeData.input_class}  name={treeData.input_name} placeholder={treeData.placeholder} value={formState[treeData.input_name]} onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.value)}}/>
-        break;
-        case "textarea":
-
-        return  <textarea  className={treeData.input_class}  name={treeData.input_name} placeholder={treeData.placeholder} value={formState[treeData.input_name]}  onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.value)}}></textarea>
-        break;
-        case "checkbox":
-
-        return  <input  className={treeData.input_class}  name={treeData.input_name} checked={formState[treeData.input_name]} type="checkbox"  onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.checked?1:0)}}/>
-        break;
-        case "radiolist":
-
-        return  <input  className={treeData.input_class}  name={treeData.input_name} checked={formState[treeData.input_name]} type="radio"  onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.value)}}/>
-        break;  
-        case "datepicker":
-
-        return  <input  className={treeData.input_class}  name={treeData.input_name} placeholder={treeData.placeholder?? 'YYYY-MM-DD'} value={formState[treeData.input_name]} type="date"  onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.value)}}/>
-        break;
-        case "dropdown":
-
-        return  <select  className={treeData.input_class}  name={formState.input_name} placeholder={treeData.placeholder} value={formState[treeData.input_name]}  onChange={(e)=>{onChangeFormState(treeData.input_name, e.target.value)}}>
-            <option></option>
-        </select>
-        break;
-        case "multi_input_container":
-
-        return  <div></div>
-        break;
+  useEffect(() => {
+    let formStateObj = {};
+    let formElm = [
+      "text",
+      "textarea",
+      "checkbox",
+      "radiolist",
+      "datepicker",
+      "daterange",
+      "dropdown",
+      "multi_input_container",
+    ];
+    for (let elm of formJson) {
+      if (formElm.includes(elm.type)) {
+        formStateObj[elm.input_name] = elm.default_value;
+      }
     }
-    return <>
+    const treeData = buildTree(formJson);
+    setNestedFormJson(treeData);
+    setFormState(formStateObj);
+  }, [formJson]);
+  const onChangeFormState = (key, value) => {
+    setFormState({ ...formState, [key]: value });
+  };
 
+  return (
+    <>
+      <div>
+        {nestedFormJson.map((data, index) => (
+          <FormRenderer
+            treeData={data}
+            key={index}
+            formState={formState}
+            onChangeFormState={onChangeFormState}
+          />
+        ))}
+      </div>
     </>
-}
+  );
+};
+
+const FormRenderer = ({ treeData, formState, onChangeFormState }) => {
+  switch (treeData.type) {
+    case "container":
+      return (
+        <div className={treeData.input_class}>
+          {treeData.childrens.map((data, index) => (
+            <FormRenderer
+              treeData={data}
+              key={index}
+              formState={formState}
+              onChangeFormState={onChangeFormState}
+            />
+          ))}
+        </div>
+      );
+      break;
+    case "label":
+      return (
+        <label className={treeData.input_class}>{treeData.default_value}</label>
+      );
+
+      break;
+    case "text":
+      return (
+        <input
+          className={treeData.input_class}
+          name={treeData.input_name}
+          placeholder={treeData.placeholder}
+          value={formState[treeData.input_name]}
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.value);
+          }}
+        />
+      );
+      break;
+    case "textarea":
+      return (
+        <textarea
+          className={treeData.input_class}
+          name={treeData.input_name}
+          placeholder={treeData.placeholder}
+          value={formState[treeData.input_name]}
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.value);
+          }}
+        ></textarea>
+      );
+      break;
+    case "checkbox":
+      return (
+        <input
+          className={treeData.input_class}
+          name={treeData.input_name}
+          checked={formState[treeData.input_name]}
+          type="checkbox"
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.checked ? 1 : 0);
+          }}
+        />
+      );
+      break;
+    case "radiolist":
+      return (
+        <input
+          className={treeData.input_class}
+          name={treeData.input_name}
+          checked={formState[treeData.input_name]}
+          type="radio"
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.value);
+          }}
+        />
+      );
+      break;
+    case "datepicker":
+      return (
+        <input
+          className={treeData.input_class}
+          name={treeData.input_name}
+          placeholder={treeData.placeholder ?? "YYYY-MM-DD"}
+          value={formState[treeData.input_name]}
+          type="date"
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.value);
+          }}
+        />
+      );
+      break;
+    case "dropdown":
+      return (
+        <select
+          className={treeData.input_class}
+          name={formState.input_name}
+          placeholder={treeData.placeholder}
+          value={formState[treeData.input_name]}
+          onChange={(e) => {
+            onChangeFormState(treeData.input_name, e.target.value);
+          }}
+        >
+          <option></option>
+        </select>
+      );
+      break;
+    case "multi_input_container":
+      return <div></div>;
+      break;
+  }
+  return <></>;
+};
 
 const DraggableComponent = ({ onDragStart, element, onDragEnd }) => (
   <div
@@ -779,9 +935,7 @@ const BuilderRenderer = ({ element, removeFormElement, editFormElement }) => {
             />
           );
         })}
-       
       </div>
-
     </>
   );
 };

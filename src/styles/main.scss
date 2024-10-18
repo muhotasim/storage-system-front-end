@@ -1,9 +1,9 @@
-@import './base/base.scss';
-@import './components/components.scss';
-@import './utils/utils.scss';
+@use './base/base.scss';
+@use './components/components.scss';
+@use './utils/utils.scss';
 
-@import './utils/grid.scss';
+@use './utils/grid.scss';
 
-@import './animation.scss';
-@import './pages.scss';
+@use './animation.scss';
+@use './pages.scss';
 

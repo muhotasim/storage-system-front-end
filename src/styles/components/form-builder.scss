@@ -3,9 +3,12 @@
     border: 1px solid lightgray;
     
     .form-element__container{
-        width: 240px;
+        width: 275px;
         border-right: 1px solid lightgray;
         height: 100vh;
+        .form-element__holder{
+            position: fixed;
+        }
         .form-element{
             display: block;
             padding: 8px;
