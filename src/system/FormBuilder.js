@@ -10,6 +10,7 @@ import {
   EditOutlined,
   SaveOutlined,
   EyeOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import formElements from "../constants/formElements";
 import Modal from "../components/Modal";
@@ -23,7 +24,9 @@ const FormBuilder = (props) => {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [errorMessage, setError] = useState("");
+  const [pages, setPages] = useState({'Page 1': []})
   const formRef = useRef();
+  const [defaultPage, setDefaultPage] = useState('Page 1')
   const [formMasterConfig, setFormMasterConfig] = useState({
     form_name: "",
     app_id: null,
@@ -33,6 +36,7 @@ const FormBuilder = (props) => {
   });
   const [editFormJson, setEditFormJson] = useState(null);
   const [fromJson, setFromJson] = useState([]);
+  
   const [fromNestedJson, setFromNestedJson] = useState([]);
   const [openLivePreview, setOpenLivePreview] = useState(false);
   const [dragingElement, setDragingElement] = useState({
@@ -333,7 +337,7 @@ const FormBuilder = (props) => {
       redirect_after_update: formMasterConfig.redirect_after_update,
       redirect_to: formMasterConfig.redirect_to,
       status: 1,
-      formJson: fromJson,
+      formJson: pages,
     };
     if (id) {
       apiHandeler
@@ -390,7 +394,8 @@ const FormBuilder = (props) => {
                 appConst.apiUrl + "/" + data.form_json_location
               );
               const formDataJson = await formData.json();
-              setFromJson(formDataJson);
+              setFromJson(formDataJson[defaultPage]);
+              setPages(formDataJson)
             }
           }
         });
@@ -445,24 +450,54 @@ const FormBuilder = (props) => {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              
               /* and other goodies */
             }) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className="mt-15">
+
+                <div>
+                  {Object.keys(pages).map((page,index)=>{
+                    return <button type="button" className="btn btn-primary btn-md pull-left ml-5" key={index} onClick={()=>{
+                      setFromJson(pages[page])
+                      setDefaultPage(page)
+                    }}>{page}</button>
+                  })}
+                </div>
                     <button
-            className="btn btn-md btn-primary pull-right"
-            // onClick={onSaveForm}
-            disabled={isSubmitting}
-            type="submit"
-          >
-            <SaveOutlined /> Save Form
-          </button>
+                      className="btn btn-md btn-primary pull-right ml-5"
+                      // onClick={onSaveForm}
+                      disabled={isSubmitting}
+                      type="submit"
+                    >
+                      <SaveOutlined /> Save Page
+                    </button>
+                    <button
+                     type="button"
+                      className="btn btn-md btn-primary pull-right"
+                      // onClick={onSaveForm}
+                      onClick={()=>{
+                        let tempP = pages
+                        tempP[defaultPage] = fromJson
+                        setPages(tempP)
+                      }}
+                    >
+                      <SaveOutlined /> Save Form
+                    </button>
           <button
-            className="btn btn-md btn-primary pull-right mr-5"
+            className="btn btn-md btn-primary pull-right mr-5" type="button"
             onClick={() => {
               setOpenLivePreview(true);
             }}
           >
             <EyeOutlined /> Live Preview
+          </button>
+          <button
+            className="btn btn-md btn-primary pull-right mr-5" type="button"
+            onClick={() => {
+              setPages({...pages, ["Page "+(Object.keys(pages).length+1)]:[]})
+            }}
+          >
+            <PlusOutlined /> Add Page
           </button>
           <p className="clearfix"></p>
                 <div className="mb-15 mt-15">
@@ -486,7 +521,7 @@ const FormBuilder = (props) => {
                       data-name={"container"}
                       data-d_id={0}
                       style={{
-                        border: "1px solid",
+                        ...(dragingElement.dragging?{border: "1px solid"}:{}),
                         borderColor: dragingElement.dragging
                           ? "#1975df"
                           : "lightgray",
