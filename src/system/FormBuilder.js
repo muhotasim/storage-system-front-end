@@ -528,6 +528,7 @@ const FormBuilder = (props) => {
                           <label>Module Name</label>
                           <Select
                             options={modules}
+                            isClearable={(val)=>onChangeFormConfig("module_id", val)}
                             value={formMasterConfig.module_id}
                             onSelect={(val) => {
                               onChangeFormConfig("module_id", val);
