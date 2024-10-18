@@ -15,6 +15,7 @@ import formElements from "../constants/formElements";
 import Modal from "../components/Modal";
 import Select from "../components/Select";
 import { Formik } from "formik";
+import { v4 as uuidv4 } from 'uuid';
 const roles = "roles";
 import * as Yup from 'yup';
 const FormBuilder = (props) => {
@@ -45,7 +46,6 @@ const FormBuilder = (props) => {
       .getAllModuleData()
       .then((res) => res.json())
       .then((res) => {
-        // console.log({res})
         setModules(
           res.data.map((d) => ({
             label: d.module_name,
@@ -72,7 +72,7 @@ const FormBuilder = (props) => {
     let parentObj = {};
     let rootObjects = [];
     tempFromJson.forEach((elm) => {
-      if (elm.type == "container") {
+      if (elm.type == "container"||elm.type=="repeater") {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
@@ -109,14 +109,16 @@ const FormBuilder = (props) => {
 
   const onDragStart = (event) => {
     const target = event.target;
-
     const name = target.dataset.name;
-    setDragingElement({
+    const d_id = target.dataset.d_id;
+    const m_id = target.dataset.m_id;
+    let obj = {
       dragging: true,
       elementName: name,
-      d_id: null,
-      m_id: null,
-    });
+      d_id,
+      m_id,
+    }
+    setDragingElement(obj);
   };
   const onDragEnd = () => {
     setDragingElement({
@@ -131,16 +133,23 @@ const FormBuilder = (props) => {
   const onDrop = (event) => {
     event.preventDefault();
     const data = event.target.dataset;
-    let mid = data.name == "container" ? data.d_id : data.m_id;
+    let mid = (data.name == "container" ||data.name=="repeater")? data.d_id : data.m_id;
     const tempFromJson = [...fromJson];
     const dropTarget = event.target;
+     
     const targetRect = dropTarget.getBoundingClientRect();
     let nextSiblingOfDropTarget = dropTarget.nextSibling;
     const middleY = targetRect.top + targetRect.height / 2;
     let masterElement = formElements.find(
       (d) => d.type == dragingElement.elementName
     );
-    if (data.name == "container") {
+    let existedIndex = tempFromJson.findIndex(d=>d.d_id==dragingElement.d_id)
+    let existedComponent = existedIndex!=-1?{...tempFromJson[existedIndex]}:null;
+    if(existedIndex!=-1)tempFromJson.splice(existedIndex,1);
+    if(existedComponent){
+      masterElement = existedComponent;
+    }
+    if (data.name == "container"||data.name =="repeater") {
       let containerIndex = tempFromJson.findIndex((d) => d.d_id == data.d_id);
       if (event.clientY - targetRect.top <= 8) {
         mid = data.m_id;
@@ -148,55 +157,53 @@ const FormBuilder = (props) => {
           tempFromJson.splice(containerIndex, 0, {
             type: masterElement.type,
             name: masterElement.name,
-            d_id: tempFromJson.length + 1,
+            d_id: existedComponent?existedComponent.d_id:uuidv4(),
             m_id: mid,
-            input_name: "",
-            input_class: "",
-            input_style: "",
-            required: false,
-            placeholder: "",
-            default_value: "",
-            options: "[]",
+            input_name: existedComponent?existedComponent.input_name:"",
+            input_class: existedComponent?existedComponent.input_class:"",
+            input_style: existedComponent?existedComponent.input_style:"",
+            required: existedComponent?existedComponent.required:false,
+            placeholder: existedComponent?existedComponent.placeholder:"",
+            default_value: existedComponent?existedComponent.default_value:"",
+            options: existedComponent?existedComponent.options:"[]",
           });
         }
-        console.log("place before container");
 
         setFromJson(tempFromJson);
         return;
       } else if (targetRect.top + targetRect.height - event.clientY <= 8) {
         mid = data.m_id;
-        console.log("place after container");
         if (!nextSiblingOfDropTarget) {
           tempFromJson.push({
             type: masterElement.type,
             name: masterElement.name,
-            d_id: tempFromJson.length + 1,
-            placeholder: "",
+            d_id: existedComponent?existedComponent.d_id:uuidv4(),
             m_id: mid,
-            input_name: "",
-            input_class: "",
-            input_style: "",
-            required: false,
-            default_value: "",
-            options: "[]",
+            input_name: existedComponent?existedComponent.input_name:"",
+            input_class: existedComponent?existedComponent.input_class:"",
+            input_style: existedComponent?existedComponent.input_style:"",
+            required: existedComponent?existedComponent.required:false,
+            placeholder: existedComponent?existedComponent.placeholder:"",
+            default_value: existedComponent?existedComponent.default_value:"",
+            options: existedComponent?existedComponent.options:"[]",
           });
         } else {
           let containerIndex = tempFromJson.findIndex(
             (d) => d.d_id == nextSiblingOfDropTarget.dataset.d_id
           );
-          if (dropTargetIndex != -1) {
+          if (containerIndex != -1) {
             tempFromJson.splice(containerIndex, 0, {
               type: masterElement.type,
               name: masterElement.name,
-              d_id: tempFromJson.length + 1,
-              placeholder: "",
+              d_id: existedComponent?existedComponent.d_id:uuidv4(),
               m_id: mid,
-              input_name: "",
-              input_class: "",
-              input_style: "",
-              required: false,
-              default_value: "",
-              options: "[]",
+              input_name: existedComponent?existedComponent.input_name:"",
+              input_class: existedComponent?existedComponent.input_class:"",
+              input_style: existedComponent?existedComponent.input_style:"",
+              required: existedComponent?existedComponent.required:false,
+              placeholder: existedComponent?existedComponent.placeholder:"",
+              default_value: existedComponent?existedComponent.default_value:"",
+              options: existedComponent?existedComponent.options:"[]",
             });
           }
         }
@@ -210,29 +217,29 @@ const FormBuilder = (props) => {
         tempFromJson.splice(dropTargetIndex, 0, {
           type: masterElement.type,
           name: masterElement.name,
-          d_id: tempFromJson.length + 1,
+          d_id: existedComponent?existedComponent.d_id:uuidv4(),
           m_id: mid,
-          input_name: "",
-          input_class: "",
-          input_style: "",
-          required: false,
-          placeholder: "",
-          default_value: "",
-          options: "[]",
+          input_name: existedComponent?existedComponent.input_name:"",
+          input_class: existedComponent?existedComponent.input_class:"",
+          input_style: existedComponent?existedComponent.input_style:"",
+          required: existedComponent?existedComponent.required:false,
+          placeholder: existedComponent?existedComponent.placeholder:"",
+          default_value: existedComponent?existedComponent.default_value:"",
+          options: existedComponent?existedComponent.options:"[]",
         });
       } else {
         tempFromJson.push({
           type: masterElement.type,
           name: masterElement.name,
-          d_id: tempFromJson.length + 1,
+          d_id: existedComponent?existedComponent.d_id:uuidv4(),
           m_id: mid,
-          input_name: "",
-          input_class: "",
-          input_style: "",
-          placeholder: "",
-          required: false,
-          default_value: "",
-          options: "[]",
+          input_name: existedComponent?existedComponent.input_name:"",
+          input_class: existedComponent?existedComponent.input_class:"",
+          input_style: existedComponent?existedComponent.input_style:"",
+          required: existedComponent?existedComponent.required:false,
+          placeholder: existedComponent?existedComponent.placeholder:"",
+          default_value: existedComponent?existedComponent.default_value:"",
+          options: existedComponent?existedComponent.options:"[]",
         });
       }
     } else {
@@ -240,15 +247,15 @@ const FormBuilder = (props) => {
         tempFromJson.push({
           type: masterElement.type,
           name: masterElement.name,
-          d_id: tempFromJson.length + 1,
-          placeholder: "",
+          d_id: existedComponent?existedComponent.d_id:uuidv4(),
           m_id: mid,
-          input_name: "",
-          input_class: "",
-          input_style: "",
-          required: false,
-          default_value: "",
-          options: "[]",
+          input_name: existedComponent?existedComponent.input_name:"",
+          input_class: existedComponent?existedComponent.input_class:"",
+          input_style: existedComponent?existedComponent.input_style:"",
+          required: existedComponent?existedComponent.required:false,
+          placeholder: existedComponent?existedComponent.placeholder:"",
+          default_value: existedComponent?existedComponent.default_value:"",
+          options: existedComponent?existedComponent.options:"[]",
         });
       } else {
         let dropTargetIndex = tempFromJson.findIndex(
@@ -258,29 +265,29 @@ const FormBuilder = (props) => {
           tempFromJson.splice(dropTargetIndex, 0, {
             type: masterElement.type,
             name: masterElement.name,
-            d_id: tempFromJson.length + 1,
-            placeholder: "",
+            d_id: existedComponent?existedComponent.d_id:uuidv4(),
             m_id: mid,
-            input_name: "",
-            input_class: "",
-            input_style: "",
-            required: false,
-            default_value: "",
-            options: "[]",
+            input_name: existedComponent?existedComponent.input_name:"",
+            input_class: existedComponent?existedComponent.input_class:"",
+            input_style: existedComponent?existedComponent.input_style:"",
+            required: existedComponent?existedComponent.required:false,
+            placeholder: existedComponent?existedComponent.placeholder:"",
+            default_value: existedComponent?existedComponent.default_value:"",
+            options: existedComponent?existedComponent.options:"[]",
           });
         } else {
           tempFromJson.push({
             type: masterElement.type,
             name: masterElement.name,
-            d_id: tempFromJson.length + 1,
-            placeholder: "",
+            d_id: existedComponent?existedComponent.d_id:uuidv4(),
             m_id: mid,
-            input_name: "",
-            input_class: "",
-            input_style: "",
-            required: false,
-            default_value: "",
-            options: "[]",
+            input_name: existedComponent?existedComponent.input_name:"",
+            input_class: existedComponent?existedComponent.input_class:"",
+            input_style: existedComponent?existedComponent.input_style:"",
+            required: existedComponent?existedComponent.required:false,
+            placeholder: existedComponent?existedComponent.placeholder:"",
+            default_value: existedComponent?existedComponent.default_value:"",
+            options: existedComponent?existedComponent.options:"[]",
           });
         }
       }
@@ -299,7 +306,7 @@ const FormBuilder = (props) => {
     let parentObj = {};
     let rootObjects = [];
     json.forEach((elm) => {
-      if (elm.type == "container") {
+      if (elm.type == "container"||elm.type=='repeater') {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
@@ -322,7 +329,7 @@ const FormBuilder = (props) => {
     const data = {
       app_id: formMasterConfig.app_id,
       form_name: values.form_name,
-      module_id: formMasterConfig.module_id,
+      module_id: formMasterConfig.module_id?formMasterConfig.module_id.value:null,
       redirect_after_update: formMasterConfig.redirect_after_update,
       redirect_to: formMasterConfig.redirect_to,
       status: 1,
@@ -494,6 +501,9 @@ const FormBuilder = (props) => {
                             key={element.d_id}
                             removeFormElement={removeFormElement}
                             editFormElement={editFormElement}
+                            
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
                           />
                         );
                       })}
@@ -568,7 +578,7 @@ const FormBuilder = (props) => {
                             "Datepicker",
                             "DateRange",
                             "Drop Down",
-                            "Multiple Input Container",
+                            "Repeater",
                           ].includes(editFormJson.name) && (
                             <div className="mt-5">
                               <label>Name</label>
@@ -632,7 +642,7 @@ const FormBuilder = (props) => {
                             "Datepicker",
                             "DateRange",
                             "Drop Down",
-                            "Multiple Input Container",
+                            "Repeater",
                           ].includes(editFormJson.name) && (
                             <div className="mt-5 mb-5">
                               <label>
@@ -708,7 +718,7 @@ const LivePreview = ({ formJson = [] }) => {
     let parentObj = {};
     let rootObjects = [];
     json.forEach((elm) => {
-      if (elm.type == "container") {
+      if (elm.type == "container"||elm.type=="repeater") {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
@@ -736,7 +746,7 @@ const LivePreview = ({ formJson = [] }) => {
       "datepicker",
       "daterange",
       "dropdown",
-      "multi_input_container",
+      "repeater",
     ];
     for (let elm of formJson) {
       if (formElm.includes(elm.type)) {
@@ -870,7 +880,7 @@ const FormRenderer = ({ treeData, formState, onChangeFormState }) => {
         </select>
       );
       break;
-    case "multi_input_container":
+    case "repeater":
       return <div></div>;
       break;
   }
@@ -889,7 +899,7 @@ const DraggableComponent = ({ onDragStart, element, onDragEnd }) => (
   </div>
 );
 
-const BuilderRenderer = ({ element, removeFormElement, editFormElement }) => {
+const BuilderRenderer = ({ element, removeFormElement, editFormElement, onDragStart, onDragEnd }) => {
   return (
     <>
       <div
@@ -898,6 +908,8 @@ const BuilderRenderer = ({ element, removeFormElement, editFormElement }) => {
         data-name={element.type}
         data-d_id={element.d_id}
         data-m_id={element.m_id}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
       >
         <p>
           {element.name}{" "}
@@ -928,6 +940,8 @@ const BuilderRenderer = ({ element, removeFormElement, editFormElement }) => {
         {element?.childrens?.map((element, index) => {
           return (
             <BuilderRenderer
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
               element={element}
               key={element.d_id}
               removeFormElement={removeFormElement}

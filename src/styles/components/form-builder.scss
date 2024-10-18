@@ -5,9 +5,12 @@
     .form-element__container{
         width: 275px;
         border-right: 1px solid lightgray;
-        height: 100vh;
+        min-height: 200vh;
+        position: relative;
         .form-element__holder{
             position: fixed;
+            width: 100%;
+            max-width: 200px;
         }
         .form-element{
             display: block;
@@ -31,7 +34,7 @@
         .form-element{
             padding: 10px;
             border: 1px solid lightgray;
-            margin: 10px 3px;
+            margin: 0px 0px;
             cursor: pointer;
             border-radius: 3px;
             opacity: 1;

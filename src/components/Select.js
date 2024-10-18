@@ -18,7 +18,7 @@ const Select =({ options =  [],disabled, value =  null, onSelect,isClearable, st
             {
                 filteredOptions.length?filteredOptions.map((mValue,index)=>{
                     return (<div
-                     className={"item "+(mValue.value==value.value?"active":"")}
+                     className={"item "+(mValue.value==value?.value?"active":"")}
                      key={index} onClick={(e)=>{
                         onSelect(mValue)
                         }}>

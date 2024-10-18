@@ -46,8 +46,8 @@ const formElements = [
         styles: {}
     },
     {
-        name: 'Multiple Input Container',
-        type: 'multi_input_container',
+        name: 'Repeater',
+        type: 'repeater',
         styles: {}
     },
 ];

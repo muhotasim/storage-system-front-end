@@ -9,22 +9,22 @@ import {
   } from "react-router-dom";
 import Navigation from './components/Navigation';
 import Loader from './components/Loader';
-import SystemForms from './pages/SystemForms';
-const Apps = lazy(()=>import('./pages/Apps'));
-const Users = lazy(()=>import('./pages/Users'));
-const Home = lazy(()=>import('./pages/Modules'));
-const Permissions = lazy(()=>import('./pages/Permissions'));
-const Roles = lazy(()=>import('./pages/Roles'));
-const Tokens = lazy(()=>import('./pages/Tokens'));
+import SystemForms from './system/SystemForms';
+const Apps = lazy(()=>import('./system/Apps'));
+const Users = lazy(()=>import('./system/Users'));
+const Home = lazy(()=>import('./system/Modules'));
+const Permissions = lazy(()=>import('./system/Permissions'));
+const Roles = lazy(()=>import('./system/Roles'));
+const Tokens = lazy(()=>import('./system/Tokens'));
 
 
-const ModifyUser = lazy(()=>import('./pages/ModifyUser'));
-const ModifyRole = lazy(()=>import('./pages/ModifyRole'));
-const ModifyPermission =lazy(()=>import('./pages/ModifyPermission'));
-const ModifyToken =lazy(()=>import('./pages/ModifyToken'));
+const ModifyUser = lazy(()=>import('./system/ModifyUser'));
+const ModifyRole = lazy(()=>import('./system/ModifyRole'));
+const ModifyPermission =lazy(()=>import('./system/ModifyPermission'));
+const ModifyToken =lazy(()=>import('./system/ModifyToken'));
 
 
-const FormBuilder =lazy(()=>import('./pages/FormBuilder'));
+const FormBuilder =lazy(()=>import('./system/FormBuilder'));
 
 
 
