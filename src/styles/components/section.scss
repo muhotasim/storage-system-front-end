@@ -34,7 +34,7 @@ $columns: 15;
   }
 
   .pt-#{$i} {
-    padding: $i*2px;
+    padding-top: $i*2px;
   }
   .pb-#{$i} {
     padding-bottom: $i*2px;
