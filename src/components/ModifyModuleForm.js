@@ -128,7 +128,7 @@ const ModifyModuleForm = (props) => {
   };
   const removeField = (index) => {
     let tempField = fields;
-    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+    confirmModel({ message: message[appConst.lan].confirmation.delete,type: 'danger',confirmCallback:()=>{
       if (props.id) {
         const apiHandeler = new ApiHandeler(props.token);
         
