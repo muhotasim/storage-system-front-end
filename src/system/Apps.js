@@ -102,7 +102,7 @@ const Apps = (props) => {
   }
   const onDelete = (id) =>{
     const apiHandeler = new ApiHandeler(props.userStore.token);
-    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+    confirmModel({ message: message[appConst.lan].confirmation.delete, type: 'danger',confirmCallback:()=>{
       setLoading(true);
       apiHandeler.deleteApp(id).then(res=>res.json()).then(res=>{
         getAppsData();

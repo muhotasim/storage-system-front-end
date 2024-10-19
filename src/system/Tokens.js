@@ -30,7 +30,7 @@ const Tokens = (props) => {
   }
   const deleteData = d =>{
     const apiHandeler =  new ApiHandeler(props.userStore.token);
-    confirmModel({ message: message[appConst.lan].confirmation.delete,confirmCallback:()=>{
+    confirmModel({ message: message[appConst.lan].confirmation.delete,type: 'danger',confirmCallback:()=>{
       apiHandeler.deleteSystem(molduleName,d.id).then(res=>res.json()).then(res=>{
         if(res.type == appConst.successResponseType){
   
