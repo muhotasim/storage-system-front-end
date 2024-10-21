@@ -6,6 +6,18 @@ const formElements = [
         childrens: []
     },
     {
+        name: 'Row',
+        type: 'row',
+        styles: {},
+        childrens: []
+    },
+    {
+        name: 'Column',
+        type: 'column',
+        styles: {},
+        childrens: []
+    },
+    {
         name: 'Label',
         type: 'label',
         styles: {}

@@ -64,6 +64,11 @@
         "link": "/form-builder/create",
         "label": "Form Builder",
         "menu": []
+      },
+      {
+        "link": "/report-builder/create",
+        "label": "Report Builder",
+        "menu": []
       }
     ]
   }

@@ -162,6 +162,12 @@ const message = {
           title: "Create Or Update form",
           content: "Create and modify form",
         },
+      },
+      reportBuilder:{
+        header: {
+          title: "Create Or Update Report",
+          content: "Create and modify report",
+        },
       }
     },
     statusText:{

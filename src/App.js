@@ -25,6 +25,7 @@ const ModifyToken =lazy(()=>import('./system/ModifyToken'));
 
 
 const FormBuilder =lazy(()=>import('./system/FormBuilder'));
+const ReportBuilder =lazy(()=>import('./system/ReportBuilder'));
 
 
 
@@ -119,6 +120,7 @@ const App = props=>{
                 <Route exact path="/form-list" element={<SystemForms/>}/>
 
                 
+                <Route exact path="/report-builder/create" element={<ReportBuilder/>}/>
 
                 <Route exact path="/form-builder/create" element={<FormBuilder/>}/>
                 <Route exact path="/form-builder/modify/:id" element={<FormBuilder/>}/>

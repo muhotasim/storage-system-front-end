@@ -12,21 +12,19 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import formElements from "../constants/formElements";
+import reportElements from "../constants/reportElement";
 import Modal from "../components/Modal";
 import Select from "../components/Select";
 import { Formik } from "formik";
 import { v4 as uuidv4 } from 'uuid';
 const roles = "roles";
 import * as Yup from 'yup';
-const FormBuilder = (props) => {
+const ReportBuilder = (props) => {
   let { id } = useParams();
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
-  const [errorMessage, setError] = useState("");
-  const [pages, setPages] = useState({'Page 1': []})
+  const [errorMessage, setError] = useState("")
   const formRef = useRef();
-  const [defaultPage, setDefaultPage] = useState('Page 1')
   const [formMasterConfig, setFormMasterConfig] = useState({
     form_name: "",
     app_id: null,
@@ -44,20 +42,7 @@ const FormBuilder = (props) => {
     elementName: null,
     elementType: null,
   });
-  const fetchModulesData = () => {
-    const apiHandeler = new ApiHandeler(props.userStore.token);
-    apiHandeler
-      .getAllModuleData()
-      .then((res) => res.json())
-      .then((res) => {
-        setModules(
-          res.data.map((d) => ({
-            label: d.module_name,
-            value: d.id,
-          }))
-        );
-      });
-  };
+
   const onChangeFormConfig = (key, value) =>
     setFormMasterConfig({ ...formMasterConfig, [key]: value });
   const onChangeEditFormJson = (e) =>
@@ -71,19 +56,19 @@ const FormBuilder = (props) => {
           : e.target.value,
     });
   const removeFormElement = (d_id) => {
-    const tempFromJson = [...fromJson];
+    const tempReportJson = [...fromJson];
     let removeDids = [];
     let parentObj = {};
     let rootObjects = [];
-    tempFromJson.forEach((elm) => {
-      if (["container", "repeater", "row", "column"].includes(elm.type)) {
+    tempReportJson.forEach((elm) => {
+      if (["mainquery", "subquery"].includes(elm.type)) {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
       }
     });
 
-    tempFromJson.forEach((elm) => {
+    tempReportJson.forEach((elm) => {
       if (parentObj[elm.m_id]) {
         parentObj[elm.m_id].childrens.push(parentObj[elm.d_id]);
       }
@@ -100,10 +85,10 @@ const FormBuilder = (props) => {
     updateRemoveIds(obj);
 
     for (let id of removeDids) {
-      let index = tempFromJson.findIndex((d) => d.d_id == id);
-      tempFromJson.splice(index, 1);
+      let index = tempReportJson.findIndex((d) => d.d_id == id);
+      tempReportJson.splice(index, 1);
     }
-    setFromJson(tempFromJson);
+    setFromJson(tempReportJson);
     setEditFormJson(null);
   };
   const editFormElement = (d_id) => {
@@ -137,28 +122,28 @@ const FormBuilder = (props) => {
   const onDrop = (event) => {
     event.preventDefault();
     const data = event.target.dataset;
-    let mid = (["container", "repeater", "row", "column"].includes(data.name))? data.d_id : data.m_id;
-    const tempFromJson = [...fromJson];
+    let mid = (["mainquery", "subquery"].includes(data.name))? data.d_id : data.m_id;
+    const tempReportJson = [...fromJson];
     const dropTarget = event.target;
      
     const targetRect = dropTarget.getBoundingClientRect();
     let nextSiblingOfDropTarget = dropTarget.nextSibling;
     const middleY = targetRect.top + targetRect.height / 2;
-    let masterElement = formElements.find(
+    let masterElement = reportElements.find(
       (d) => d.type == dragingElement.elementName
     );
-    let existedIndex = tempFromJson.findIndex(d=>d.d_id==dragingElement.d_id)
-    let existedComponent = existedIndex!=-1?{...tempFromJson[existedIndex]}:null;
-    if(existedIndex!=-1)tempFromJson.splice(existedIndex,1);
+    let existedIndex = tempReportJson.findIndex(d=>d.d_id==dragingElement.d_id)
+    let existedComponent = existedIndex!=-1?{...tempReportJson[existedIndex]}:null;
+    if(existedIndex!=-1)tempReportJson.splice(existedIndex,1);
     if(existedComponent){
       masterElement = existedComponent;
     }
-    if (["container", "repeater", "row", "column"].includes(data.name)) {
-      let containerIndex = tempFromJson.findIndex((d) => d.d_id == data.d_id);
+    if (["mainquery", "subquery"].includes(data.name)) {
+      let containerIndex = tempReportJson.findIndex((d) => d.d_id == data.d_id);
       if (event.clientY - targetRect.top <= 8) {
         mid = data.m_id;
         if (containerIndex != -1) {
-          tempFromJson.splice(containerIndex, 0, {
+          tempReportJson.splice(containerIndex, 0, {
             type: masterElement.type,
             name: masterElement.name,
             d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -173,12 +158,12 @@ const FormBuilder = (props) => {
           });
         }
 
-        setFromJson(tempFromJson);
+        setFromJson(tempReportJson);
         return;
       } else if (targetRect.top + targetRect.height - event.clientY <= 8) {
         mid = data.m_id;
         if (!nextSiblingOfDropTarget) {
-          tempFromJson.push({
+          tempReportJson.push({
             type: masterElement.type,
             name: masterElement.name,
             d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -192,11 +177,11 @@ const FormBuilder = (props) => {
             options: existedComponent?existedComponent.options:"[]",
           });
         } else {
-          let containerIndex = tempFromJson.findIndex(
+          let containerIndex = tempReportJson.findIndex(
             (d) => d.d_id == nextSiblingOfDropTarget.dataset.d_id
           );
           if (containerIndex != -1) {
-            tempFromJson.splice(containerIndex, 0, {
+            tempReportJson.splice(containerIndex, 0, {
               type: masterElement.type,
               name: masterElement.name,
               d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -211,14 +196,14 @@ const FormBuilder = (props) => {
             });
           }
         }
-        setFromJson(tempFromJson);
+        setFromJson(tempReportJson);
         return;
       }
     }
     if (event.clientY < middleY) {
-      let dropTargetIndex = tempFromJson.findIndex((d) => d.d_id == data.d_id);
+      let dropTargetIndex = tempReportJson.findIndex((d) => d.d_id == data.d_id);
       if (dropTargetIndex != -1) {
-        tempFromJson.splice(dropTargetIndex, 0, {
+        tempReportJson.splice(dropTargetIndex, 0, {
           type: masterElement.type,
           name: masterElement.name,
           d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -232,7 +217,7 @@ const FormBuilder = (props) => {
           options: existedComponent?existedComponent.options:"[]",
         });
       } else {
-        tempFromJson.push({
+        tempReportJson.push({
           type: masterElement.type,
           name: masterElement.name,
           d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -248,7 +233,7 @@ const FormBuilder = (props) => {
       }
     } else {
       if (!nextSiblingOfDropTarget) {
-        tempFromJson.push({
+        tempReportJson.push({
           type: masterElement.type,
           name: masterElement.name,
           d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -262,11 +247,11 @@ const FormBuilder = (props) => {
           options: existedComponent?existedComponent.options:"[]",
         });
       } else {
-        let dropTargetIndex = tempFromJson.findIndex(
+        let dropTargetIndex = tempReportJson.findIndex(
           (d) => d.d_id == nextSiblingOfDropTarget.dataset.d_id
         );
         if (dropTargetIndex != -1) {
-          tempFromJson.splice(dropTargetIndex, 0, {
+          tempReportJson.splice(dropTargetIndex, 0, {
             type: masterElement.type,
             name: masterElement.name,
             d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -280,7 +265,7 @@ const FormBuilder = (props) => {
             options: existedComponent?existedComponent.options:"[]",
           });
         } else {
-          tempFromJson.push({
+          tempReportJson.push({
             type: masterElement.type,
             name: masterElement.name,
             d_id: existedComponent?existedComponent.d_id:uuidv4(),
@@ -296,7 +281,7 @@ const FormBuilder = (props) => {
         }
       }
     }
-    setFromJson(tempFromJson);
+    setFromJson(tempReportJson);
   };
 
   const onSaveEdit = () => {
@@ -310,7 +295,7 @@ const FormBuilder = (props) => {
     let parentObj = {};
     let rootObjects = [];
     json.forEach((elm) => {
-      if (["container", "repeater", "row", "column"].includes(elm.type)) {
+      if (["mainquery", "subquery"].includes(elm.type)) {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
@@ -329,81 +314,17 @@ const FormBuilder = (props) => {
 
   const onSaveForm = (values, setSubmitting) => {
     setSubmitting(true);
-    const apiHandeler = new ApiHandeler(props.userStore.token);
-    const data = {
-      app_id: formMasterConfig.app_id,
-      form_name: values.form_name,
-      module_id: formMasterConfig.module_id?formMasterConfig.module_id.value:null,
-      redirect_after_update: formMasterConfig.redirect_after_update,
-      redirect_to: formMasterConfig.redirect_to,
-      status: 1,
-      formJson: pages,
-    };
-    if (id) {
-      apiHandeler
-        .updateSystem(id, "system_forms", data)
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.type == appConst.successResponseType) {
-            window.notify(message[appConst.lan].updatedSave, 3000, "default");
-          } else {
-            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
-          }
-          setSubmitting(false);
-        });
-    } else {
-      apiHandeler
-        .insertSystemForm(data)
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.type == appConst.successResponseType) {
-            window.notify(message[appConst.lan].updatedSave, 3000, "default");
-          } else {
-            window.notify(message[appConst.lan].failedToUpdate, 3000, "danger");
-          }
-          setSubmitting(false);
-        });
-    }
+   
   };
   useEffect(() => {
     buildTree(fromJson);
   }, [fromJson]);
 
   const getFormEditData = () => {
-    const apiHandeler = new ApiHandeler(props.userStore.token);
-    if (id) {
-      apiHandeler
-        .querySystem("system_forms", {
-          condition: JSON.stringify([
-            { field: "id", condition: "=", value: `'${id}'` },
-          ]),
-        })
-        .then((res) => res.json())
-        .then(async (permissionRes) => {
-          if (permissionRes.type == appConst.successResponseType) {
-            const data = permissionRes.data[0];
-            setFormMasterConfig({
-              form_name: data.form_name,
-              app_id: data.app_id,
-              module_id: data.module_id,
-              redirect_after_update: data.redirect_after_update,
-              redirect_to: data.redirect_to,
-            });
-            if (data) {
-              const formData = await fetch(
-                appConst.apiUrl + "/" + data.form_json_location
-              );
-              const formDataJson = await formData.json();
-              setFromJson(formDataJson[defaultPage]);
-              setPages(formDataJson)
-            }
-          }
-        });
-    }
+    
   };
 
   useEffect(() => {
-    fetchModulesData();
     if (id) {
       getFormEditData();
     }
@@ -414,10 +335,10 @@ const FormBuilder = (props) => {
       <Header
         title={
           id
-            ? message[appConst.lan].pages.formBuilder.header.title
-            : message[appConst.lan].pages.formBuilder.header.title
+            ? message[appConst.lan].pages.reportBuilder.header.title
+            : message[appConst.lan].pages.reportBuilder.header.title
         }
-        description={message[appConst.lan].pages.formBuilder.header.content}
+        description={message[appConst.lan].pages.reportBuilder.header.content}
       />
 
       <div>
@@ -455,34 +376,15 @@ const FormBuilder = (props) => {
             }) => (
               <form onSubmit={handleSubmit} className="mt-15">
 
-                <div>
-                  {Object.keys(pages).map((page,index)=>{
-                    return <button type="button" className="btn btn-primary btn-md pull-left ml-5" key={index} onClick={()=>{
-                      setFromJson(pages[page])
-                      setDefaultPage(page)
-                    }}>{page}</button>
-                  })}
-                </div>
                     <button
                       className="btn btn-md btn-primary pull-right ml-5"
                       // onClick={onSaveForm}
                       disabled={isSubmitting}
                       type="submit"
                     >
-                      <SaveOutlined /> Save Page
+                      <SaveOutlined /> Save Report
                     </button>
-                    <button
-                     type="button"
-                      className="btn btn-md btn-primary pull-right"
-                      // onClick={onSaveForm}
-                      onClick={()=>{
-                        let tempP = pages
-                        tempP[defaultPage] = fromJson
-                        setPages(tempP)
-                      }}
-                    >
-                      <SaveOutlined /> Save Form
-                    </button>
+                 
           <button
             className="btn btn-md btn-primary pull-right mr-5" type="button"
             onClick={() => {
@@ -491,20 +393,12 @@ const FormBuilder = (props) => {
           >
             <EyeOutlined /> Live Preview
           </button>
-          <button
-            className="btn btn-md btn-primary pull-right mr-5" type="button"
-            onClick={() => {
-              setPages({...pages, ["Page "+(Object.keys(pages).length+1)]:[]})
-            }}
-          >
-            <PlusOutlined /> Add Page
-          </button>
           <p className="clearfix"></p>
                 <div className="mb-15 mt-15">
                   <div className="form-builder__container">
                     <div className="form-element__container">
                       <div className="form-element__holder">
-                        {formElements.map((element, index) => {
+                        {reportElements.map((element, index) => {
                           return (
                             <DraggableComponent
                               element={element}
@@ -545,9 +439,8 @@ const FormBuilder = (props) => {
                     </div>
                     <div className="form-element__container">
                       <div className="px-5">
-                        <label className="bold">Default Form Values</label>
                         <div className="mt-10 mb-10">
-                          <label>Form Name</label>
+                          <label>Report Name</label>
                           <input
                             className="input input-md"
                             value={values.form_name}
@@ -559,47 +452,8 @@ const FormBuilder = (props) => {
                           />
                           {errors.form_name && touched.form_name && errors.form_name}
                         </div>
-                        <div className="mt-10 mb-10">
-                          <label>Module Name</label>
-                          <Select
-                            options={modules}
-                            isClearable={(val)=>onChangeFormConfig("module_id", val)}
-                            value={formMasterConfig.module_id}
-                            onSelect={(val) => {
-                              onChangeFormConfig("module_id", val);
-                            }}
-                          />
-                        </div>
-                        <div className="mt-10 mb-10">
-                          <label>
-                            <input
-                              type="checkbox"
-                              value={formMasterConfig.redirect_after_update}
-                              onChange={(e) =>
-                                onChangeFormConfig(
-                                  "redirect_after_update",
-                                  e.target.checked ? 1 : 0
-                                )
-                              }
-                            />{" "}
-                            Redirect After Update
-                          </label>
-                        </div>
-                        {formMasterConfig.redirect_after_update == 1 && (
-                          <div className="mt-10 mb-10">
-                            <label>Redirect to</label>
-                            <input
-                              className="input input-md"
-                              value={formMasterConfig.redirect_to}
-                              onChange={(e) =>
-                                onChangeFormConfig(
-                                  "redirect_to",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        )}
+                        
+                       
                       </div>
                       {editFormJson && (
                         <div className="px-5">
@@ -741,20 +595,20 @@ const FormBuilder = (props) => {
           setOpenLivePreview(false);
         }}
       >
-        <div>{openLivePreview && <LivePreview formJson={fromJson} />}</div>
+        <div>{openLivePreview && <LivePreview reportJson={fromJson} />}</div>
       </Modal>
     </div>
   );
 };
 
-const LivePreview = ({ formJson = [] }) => {
+const LivePreview = ({ reportJson = [] }) => {
   const [nestedFormJson, setNestedFormJson] = useState([]);
   const [formState, setFormState] = useState([]);
   const buildTree = (json = []) => {
     let parentObj = {};
     let rootObjects = [];
     json.forEach((elm) => {
-      if (["container", "repeater", "row", "column"].includes(elm.type)) {
+      if (["mainquery", "subquery"].includes(elm.type)) {
         parentObj[elm.d_id] = { ...elm, childrens: [] };
       } else {
         parentObj[elm.d_id] = { ...elm };
@@ -784,15 +638,15 @@ const LivePreview = ({ formJson = [] }) => {
       "dropdown",
       "repeater",
     ];
-    for (let elm of formJson) {
+    for (let elm of reportJson) {
       if (formElm.includes(elm.type)) {
         formStateObj[elm.input_name] = elm.default_value;
       }
     }
-    const treeData = buildTree(formJson);
+    const treeData = buildTree(reportJson);
     setNestedFormJson(treeData);
     setFormState(formStateObj);
-  }, [formJson]);
+  }, [reportJson]);
   const onChangeFormState = (key, value) => {
     setFormState({ ...formState, [key]: value });
   };
@@ -1025,4 +879,4 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {};
 };
-export default connect(mapStateToProps, mapDispatchToProps)(FormBuilder);
+export default connect(mapStateToProps, mapDispatchToProps)(ReportBuilder);
